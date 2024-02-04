@@ -128,8 +128,8 @@ const EditSongForm: React.FC = () => {
   const isLoading = useAppSelector(selectLoading);
 
   const handleUpdate = async (
-    values: Partial<Song>,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+    values: any,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => any }
   ) => {
     try {
       if (!song) return;
@@ -137,23 +137,21 @@ const EditSongForm: React.FC = () => {
       dispatch(updateSongStart(updatedSong));
       toast.success("Song updated successfully");
       navigate("/songs");
-    } catch (error) {
-      console.error("Error updating song:", error);
-      toast.error("Failed to update song");
+    } catch (error: any) {
+      toast.error(error.message);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (id: any) => {
     try {
       if (!id) return;
       dispatch(deleteSongStart(id!));
       toast.success("Song deleted successfully");
       navigate("/songs");
-    } catch (error) {
-      console.error("Error deleting song:", error);
-      toast.error("Failed to delete song");
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 

@@ -24,7 +24,7 @@ const songSlice = createSlice({
     },
     fetchSongsSuccess(state, action: PayloadAction<Song[]>) {
       state.loading = false;
-      state.songs = action.payload;
+      state.songs = action.payload.slice(); // Defensive copy for immutability
       state.error = null;
     },
     fetchSongsFailure(state, action: PayloadAction<string>) {
@@ -55,8 +55,8 @@ const songSlice = createSlice({
       );
       if (index !== -1) {
         state.songs[index] = action.payload;
-        state.error = null;
       }
+      state.error = null;
     },
     updateSongFailure(state, action: PayloadAction<string>) {
       state.loading = false;
