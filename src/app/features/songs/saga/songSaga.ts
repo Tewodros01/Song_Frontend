@@ -1,4 +1,4 @@
-import { call, put, takeLatest, Effect } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
 import {
   fetchSongsApi,
@@ -22,9 +22,9 @@ import {
 } from "../slice/songSlice";
 import { Song } from "../../../../types/song";
 
-function* fetchSongsSaga(): Generator<Effect, void, any> {
+function* fetchSongsSaga(): Generator<any, void, any> {
   try {
-    yield put(fetchSongsStart());
+    put(fetchSongsStart());
     const songs: Song[] = yield call(fetchSongsApi);
     yield put(fetchSongsSuccess(songs));
   } catch (error: any) {
@@ -32,11 +32,9 @@ function* fetchSongsSaga(): Generator<Effect, void, any> {
   }
 }
 
-function* addSongSaga(
-  action: PayloadAction<Song>
-): Generator<Effect, void, any> {
+function* addSongSaga(action: PayloadAction<Song>): Generator<any, void, any> {
   try {
-    yield put(addSongStart());
+    put(addSongStart());
     const newSong: Song = yield call(addSongApi, action.payload);
     yield put(addSongSuccess(newSong));
   } catch (error: any) {
@@ -46,9 +44,9 @@ function* addSongSaga(
 
 function* updateSongSaga(
   action: PayloadAction<Song>
-): Generator<Effect, void, any> {
+): Generator<any, void, any> {
   try {
-    yield put(updateSongStart());
+    put(updateSongStart());
     const updatedSong: Song = yield call(updateSongApi, action.payload);
     yield put(updateSongSuccess(updatedSong));
   } catch (error: any) {
@@ -58,9 +56,9 @@ function* updateSongSaga(
 
 function* deleteSongSaga(
   action: PayloadAction<string>
-): Generator<Effect, void, any> {
+): Generator<any, void, any> {
   try {
-    yield put(deleteSongStart());
+    put(deleteSongStart());
     yield call(deleteSongApi, action.payload);
     yield put(deleteSongSuccess(action.payload));
   } catch (error: any) {
@@ -68,7 +66,7 @@ function* deleteSongSaga(
   }
 }
 
-function* songSaga(): Generator<Effect, void, any> {
+function* songSaga() {
   yield takeLatest("songs/fetchSongsStart", fetchSongsSaga);
   yield takeLatest("songs/addSongStart", addSongSaga);
   yield takeLatest("songs/updateSongStart", updateSongSaga);
