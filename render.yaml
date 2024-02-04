@@ -1,5 +1,5 @@
 services:
   - name: song-web-app
     type: static
-    buildCommand: npm run build
+    buildCommand: yarn build
     publishDir: dist
