@@ -11,7 +11,6 @@ import {
   selectSongById,
 } from "../slice/songSlice";
 import styled from "styled-components";
-import { Song } from "../../../../types/song";
 
 const Container = styled.section`
   padding: 1rem;
