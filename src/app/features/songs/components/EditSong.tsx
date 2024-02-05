@@ -123,7 +123,6 @@ const EditSongForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const song = useAppSelector(selectSongById(id!));
-  const isLoading = useAppSelector(selectLoading);
 
   const handleUpdate = async (
     values: any,
@@ -154,8 +153,8 @@ const EditSongForm: React.FC = () => {
   };
 
   let content;
-  if (isLoading) {
-    content = <h1>loading</h1>;
+  if (id) {
+    content = <h1>Song Not Found</h1>;
   } else if (song) {
     content = (
       <Formik
