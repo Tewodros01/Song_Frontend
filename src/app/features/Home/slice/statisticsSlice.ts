@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../../../store/store";
 import { Statistics } from "../../../../types/statistics";
 
@@ -22,11 +22,11 @@ const statisticSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    getStatisticsSuccess: (state, action) => {
+    getStatisticsSuccess: (state, action: PayloadAction<Statistics>) => {
       state.loading = false;
       state.statistics = action.payload;
     },
-    getStatisticsFailure: (state, action) => {
+    getStatisticsFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },

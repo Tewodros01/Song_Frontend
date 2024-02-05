@@ -76,7 +76,7 @@ const Grid = styled.div`
 `;
 
 const Stat = styled.div`
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
   padding: 1.5rem;
   border-radius: 0.5rem;
   text-align: center;
