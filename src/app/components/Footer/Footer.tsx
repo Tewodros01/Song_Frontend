@@ -7,10 +7,6 @@ const PageContainer = styled.div`
   min-height: 50vh;
 `;
 
-const ContentContainer = styled.div`
-  flex: 1;
-`;
-
 const FooterContainer = styled.footer`
   background-color: #333;
   color: #fff;
@@ -32,7 +28,6 @@ const FooterLink = styled.a`
 const Footer: React.FC = () => {
   return (
     <PageContainer>
-      <ContentContainer>Container</ContentContainer>
       <FooterContainer>
         <FooterText>&copy; 2024 Song App | All Rights Reserved</FooterText>
         <FooterText>
