@@ -1,5 +1,4 @@
-import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useState, useEffect } from "react";
 import * as Yup from "yup";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -32,6 +31,7 @@ const Title = styled.h6`
   font-weight: bold;
   color: #374151;
   margin-bottom: 1.5rem;
+  text-align: center;
 `;
 
 const FormGroup = styled.div`
@@ -46,7 +46,7 @@ const Label = styled.label`
   margin-bottom: 0.5rem;
 `;
 
-const Input = styled(Field)`
+const Input = styled.input`
   width: 100%;
   padding: 0.7rem;
   font-size: 1rem;
@@ -54,7 +54,7 @@ const Input = styled(Field)`
   border-radius: 0.25rem;
 `;
 
-const ErrorMessageStyled = styled(ErrorMessage)`
+const ErrorMessageStyled = styled.div`
   font-size: 0.875rem;
   color: #ef4444;
   margin-top: 0.25rem;
@@ -90,11 +90,16 @@ const DeleteButton = styled(ButtonBase)`
 `;
 
 const BackButton = styled(Link)`
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
   background-color: #d1d5db;
   color: #4b5563;
   font-size: 1rem;
   font-weight: bold;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
@@ -103,6 +108,12 @@ const BackButton = styled(Link)`
   &:hover {
     background-color: #9ca3af;
   }
+`;
+
+const ArrowIcon = styled.svg`
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
 `;
 
 const ButtonGroup = styled.div`
@@ -126,24 +137,48 @@ const EditSongForm: React.FC = () => {
   const song = useAppSelector(selectSongById(id!));
   const isLoading = useAppSelector(selectLoading);
 
-  const handleUpdate = async (
-    values: any,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => any }
-  ) => {
+  const [formData, setFormData] = useState({
+    title: "",
+    artist: "",
+    album: "",
+    genre: "",
+  });
+
+  useEffect(() => {
+    if (song) {
+      setFormData({
+        title: song.title,
+        artist: song.artist,
+        album: song.album,
+        genre: song.genre,
+      });
+    }
+  }, [song]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdate = async () => {
     try {
+      await validationSchema.validate(formData, { abortEarly: false });
       if (!song) return;
-      const updatedSong = { ...song, ...values };
+      const updatedSong = { ...song, ...formData };
       dispatch(updateSongStart(updatedSong));
       toast.success("Song updated successfully");
       navigate("/songs");
     } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setSubmitting(false);
+      error.inner.forEach((e: any) => {
+        toast.error(e.message);
+      });
     }
   };
 
-  const handleDelete = async (id: any) => {
+  const handleDelete = async () => {
     try {
       if (!id) return;
       dispatch(deleteSongStart(id!));
@@ -156,57 +191,95 @@ const EditSongForm: React.FC = () => {
 
   let content = null;
   if (isLoading) {
-    content = <h1>loading</h1>;
+    content = <h1>Loading</h1>;
   } else if (song) {
     content = (
-      <Formik
-        initialValues={{
-          title: song.title,
-          artist: song.artist,
-          album: song.album,
-          genre: song.genre,
-        }}
-        validationSchema={validationSchema}
-        onSubmit={handleUpdate}
-      >
-        <Form>
-          <FormGroup>
-            <Label htmlFor="title">Song Title</Label>
-            <Input type="text" id="title" name="title" placeholder="Title" />
-            <ErrorMessageStyled name="title" component="div" />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="artist">Artist</Label>
-            <Input type="text" id="artist" name="artist" placeholder="Artist" />
-            <ErrorMessageStyled name="artist" component="div" />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="album">Album</Label>
-            <Input type="text" id="album" name="album" placeholder="Album" />
-            <ErrorMessageStyled name="album" component="div" />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="genre">Genre</Label>
-            <Input type="text" id="genre" name="genre" placeholder="Genre" />
-            <ErrorMessageStyled name="genre" component="div" />
-          </FormGroup>
-          <ButtonGroup>
-            <BackButton to="/songs">Back</BackButton>
-            <SubmitButton type="submit">Update</SubmitButton>
-          </ButtonGroup>
-        </Form>
-      </Formik>
+      <form>
+        <FormGroup>
+          <Label htmlFor="title">Song Title</Label>
+          <Input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Title"
+            value={formData.title}
+            onChange={handleChange}
+          />
+          <ErrorMessageStyled>
+            {formData.title === "" && "Title is required"}
+          </ErrorMessageStyled>
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="artist">Artist</Label>
+          <Input
+            type="text"
+            id="artist"
+            name="artist"
+            placeholder="Artist"
+            value={formData.artist}
+            onChange={handleChange}
+          />
+          <ErrorMessageStyled>
+            {formData.artist === "" && "Artist is required"}
+          </ErrorMessageStyled>
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="album">Album</Label>
+          <Input
+            type="text"
+            id="album"
+            name="album"
+            placeholder="Album"
+            value={formData.album}
+            onChange={handleChange}
+          />
+          <ErrorMessageStyled>
+            {formData.album === "" && "Album is required"}
+          </ErrorMessageStyled>
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="genre">Genre</Label>
+          <Input
+            type="text"
+            id="genre"
+            name="genre"
+            placeholder="Genre"
+            value={formData.genre}
+            onChange={handleChange}
+          />
+          <ErrorMessageStyled>
+            {formData.genre === "" && "Genre is required"}
+          </ErrorMessageStyled>
+        </FormGroup>
+        <ButtonGroup>
+          <SubmitButton type="button" onClick={handleUpdate}>
+            Update
+          </SubmitButton>
+          <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
+        </ButtonGroup>
+      </form>
     );
   }
 
   return (
     <Container>
       <FormContainer>
+        <BackButton to="/songs">
+          <ArrowIcon
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M6.293 7.293a1 1 0 011.414 0L12 11.586V4a1 1 0 012 0v7.586l4.293-4.293a1 1 0 111.414 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
+          </ArrowIcon>{" "}
+          Back
+        </BackButton>
         <Title>Edit Song</Title>
         {content}
-        <ButtonGroup>
-          <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
-        </ButtonGroup>
       </FormContainer>
     </Container>
   );

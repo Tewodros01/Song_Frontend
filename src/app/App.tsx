@@ -14,6 +14,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
+        +z
         <Route path="/songs" element={<SongLists />} />
         <Route path="/edit/:id" element={<EditSongForm />} />
         <Route path="/newsong" element={<AddSongForm />} />

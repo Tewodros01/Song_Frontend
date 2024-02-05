@@ -1,0 +1,5 @@
+services:
+  - name: song-web-app
+    type: static
+    buildCommand: yarn build
+    publishDir: dist

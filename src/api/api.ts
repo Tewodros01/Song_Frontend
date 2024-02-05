@@ -47,9 +47,10 @@ export const updateSongApi = async (updatedSong: Song): Promise<Song> => {
 };
 
 // Function to delete a song
-export const deleteSongApi = async (songId: string): Promise<void> => {
+export const deleteSongApi = async (songId: string): Promise<string> => {
   try {
     await axios.delete(`${API_BASE_URL}/songs/${songId}`);
+    return songId;
   } catch (error) {
     // Handle network errors or response errors
     throw new Error("Failed to delete song. Please try again later.");
