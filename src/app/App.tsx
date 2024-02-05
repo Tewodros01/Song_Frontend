@@ -4,7 +4,6 @@ import Layout from "./components/Layout";
 import Home from "./features/Home/components/Home";
 import SongLists from "./features/songs/components/SongLists";
 import AddSongForm from "./features/songs/components/AddSongForm";
-
 import EditSongForm from "./features/songs/components/EditSong";
 import ArtistsComponent from "./features/songs/components/ArtistsComponent";
 import AlbumsComponent from "./features/songs/components/AlbumsComponent";
@@ -14,7 +13,6 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        +z
         <Route path="/songs" element={<SongLists />} />
         <Route path="/edit/:id" element={<EditSongForm />} />
         <Route path="/newsong" element={<AddSongForm />} />
