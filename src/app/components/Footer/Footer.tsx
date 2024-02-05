@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 50vh; /* Make sure the container takes at least the height of the viewport */
+  min-height: 50vh;
 `;
 
 const ContentContainer = styled.div`
