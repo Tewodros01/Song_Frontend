@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Album } from "../../../../types/album";
 import { RootState } from "../../../../store/store";
 
@@ -21,11 +21,11 @@ const albumSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    getAlbumSuccess: (state, action) => {
+    getAlbumSuccess: (state, action: PayloadAction<Album[]>) => {
       state.loading = false;
       state.albums = action.payload;
     },
-    getAlbumFailure: (state, action) => {
+    getAlbumFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },

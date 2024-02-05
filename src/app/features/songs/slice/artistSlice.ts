@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../../../store/store";
 import { Artist } from "../../../../types/artist";
 
@@ -21,11 +21,11 @@ const artistSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    getArtistSuccess: (state, action) => {
+    getArtistSuccess: (state, action: PayloadAction<Artist[]>) => {
       state.loading = false;
       state.artists = action.payload;
     },
-    getArtistFailure: (state, action) => {
+    getArtistFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },
