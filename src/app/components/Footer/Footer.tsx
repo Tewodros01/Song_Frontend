@@ -8,7 +8,7 @@ const PageContainer = styled.div`
 `;
 
 const ContentContainer = styled.div`
-  flex: 1; /* Make the content container take up remaining space */
+  flex: 1;
 `;
 
 const FooterContainer = styled.footer`
@@ -32,7 +32,7 @@ const FooterLink = styled.a`
 const Footer: React.FC = () => {
   return (
     <PageContainer>
-      <ContentContainer>{/* Your main content goes here */}</ContentContainer>
+      <ContentContainer>Container</ContentContainer>
       <FooterContainer>
         <FooterText>&copy; 2024 Song App | All Rights Reserved</FooterText>
         <FooterText>
