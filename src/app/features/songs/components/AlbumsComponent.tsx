@@ -98,7 +98,7 @@ const NoAlbumContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  font-size: 1rem;
+  font-size: 0.5rem;
   color: #555;
   padding: 1rem;
   border: 2px dashed #ccc;
@@ -141,14 +141,14 @@ const AlbumsComponent = () => {
       album.album.toLowerCase().includes(searchInput.toLowerCase())
     );
 
-    content = (
-      <AlbumGrid>
-        {filteredAlbums.length === 0 ? (
-          <NoAlbumContainer>
-            <h1>No Album Found</h1>
-          </NoAlbumContainer>
-        ) : (
-          filteredAlbums.map((item, index) => (
+    content =
+      filteredAlbums.length === 0 ? (
+        <NoAlbumContainer>
+          <h1>No Album Found</h1>
+        </NoAlbumContainer>
+      ) : (
+        <AlbumGrid>
+          {filteredAlbums.map((item, index) => (
             <AlbumCard key={index}>
               <Title>{item.album}</Title>
 
@@ -156,10 +156,9 @@ const AlbumsComponent = () => {
               <Details>Song: {item.songs}</Details>
               <Details>Album: {item.album}</Details>
             </AlbumCard>
-          ))
-        )}
-      </AlbumGrid>
-    );
+          ))}
+        </AlbumGrid>
+      );
   }
 
   return (

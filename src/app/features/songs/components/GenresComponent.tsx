@@ -142,30 +142,21 @@ const GenresComponent: React.FC = () => {
       Genres.genre.toLowerCase().includes(searchInput.toLowerCase())
     );
 
-    content = (
-      <GenresGrid>
-        {filteredgenres.length === 0 ? (
-          <NoGenresContainer>No Genres Found</NoGenresContainer>
-        ) : (
-          filteredgenres.map((item: Genre, index: number) => (
+    content =
+      filteredgenres.length === 0 ? (
+        <NoGenresContainer>No Genres Found</NoGenresContainer>
+      ) : (
+        <GenresGrid>
+          {filteredgenres.map((item: Genre, index: number) => (
             <GenresCard key={index}>
               <Title>{item.genre}</Title>
               <Details>Songs: {item.songs}</Details>
               <Details>Artists: {item.numberOfArtists}</Details>
               <Details>Albums: {item.numberOfAlbums}</Details>
             </GenresCard>
-          ))
-        )}
-      </GenresGrid>
-    );
-  }
-
-  if (error) {
-    content = (
-      <NoGenresContainer>
-        <h1>{error}</h1>
-      </NoGenresContainer>
-    );
+          ))}
+        </GenresGrid>
+      );
   }
 
   return (

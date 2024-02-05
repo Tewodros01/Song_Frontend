@@ -174,14 +174,14 @@ const SongList = () => {
       song.title?.toUpperCase().includes(searchInput.toLocaleUpperCase())
     );
 
-    content = (
-      <SongGrid>
-        {filteredSongs.length === 0 ? (
-          <NoSongContainer>
-            <h1>No Songs Found</h1>
-          </NoSongContainer>
-        ) : (
-          filteredSongs.map((song, index) => (
+    content =
+      filteredSongs.length === 0 ? (
+        <NoSongContainer>
+          <h1>No Songs Found</h1>
+        </NoSongContainer>
+      ) : (
+        <SongGrid>
+          {filteredSongs.map((song, index) => (
             <SongCard key={index}>
               <Title>{song.title}</Title>
               <Details>Artist: {song.artist}</Details>
@@ -189,10 +189,9 @@ const SongList = () => {
               <Details>Genre: {song.genre}</Details>
               <EditButton to={`/edit/${song.id}`}>Edit Song</EditButton>
             </SongCard>
-          ))
-        )}
-      </SongGrid>
-    );
+          ))}
+        </SongGrid>
+      );
   }
 
   return (

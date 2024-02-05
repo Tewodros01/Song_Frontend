@@ -139,22 +139,21 @@ const ArtistsComponent: React.FC = () => {
     const filteredArtists = artists.filter((artist: Artist) =>
       artist.artist.toLowerCase().includes(searchInput.toLowerCase())
     );
-    content = (
-      <ArtistGrid>
-        {filteredArtists.length === 0 ? (
-          <NoArtistContainer>No Artist Found</NoArtistContainer>
-        ) : (
-          filteredArtists.map((item: Artist, index: number) => (
+    content =
+      filteredArtists.length === 0 ? (
+        <NoArtistContainer>No Artist Found</NoArtistContainer>
+      ) : (
+        <ArtistGrid>
+          {filteredArtists.map((item: Artist, index: number) => (
             <ArtistCard key={index}>
               <Title>{item.artist}</Title>
               <Details>Artist: {item.artist}</Details>
               <Details>Songs: {item.songs}</Details>
               <Details>Albums: {item.albums}</Details>
             </ArtistCard>
-          ))
-        )}
-      </ArtistGrid>
-    );
+          ))}
+        </ArtistGrid>
+      );
   }
 
   return (
