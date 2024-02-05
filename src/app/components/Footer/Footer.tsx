@@ -4,7 +4,6 @@ import { styled } from "styled-components";
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 50vh;
 `;
 
 const FooterContainer = styled.footer`
