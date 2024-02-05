@@ -131,9 +131,7 @@ const AddSongForm: React.FC = () => {
   };
 
   // on submit handler
-  const onSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await validationSchema.validate(formData, { abortEarly: false });
