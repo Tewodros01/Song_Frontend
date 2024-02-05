@@ -193,6 +193,7 @@ const EditSongForm: React.FC = () => {
           <ButtonGroup>
             <BackButton to="/songs">Back</BackButton>
             <SubmitButton type="submit">Update</SubmitButton>
+            <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
           </ButtonGroup>
         </Form>
       </Formik>
@@ -204,9 +205,6 @@ const EditSongForm: React.FC = () => {
       <FormContainer>
         <Title>Edit Song</Title>
         {content}
-        <ButtonGroup>
-          <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
-        </ButtonGroup>
       </FormContainer>
     </Container>
   );
