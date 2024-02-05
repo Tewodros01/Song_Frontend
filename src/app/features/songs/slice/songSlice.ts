@@ -31,7 +31,7 @@ const songSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    addSongStart(state, action: PayloadAction<Song>) {
+    addSongStart(state) {
       state.loading = true;
       state.error = null;
     },
@@ -44,7 +44,7 @@ const songSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
-    updateSongStart(state, action: PayloadAction<Song>) {
+    updateSongStart(state) {
       state.loading = true;
       state.error = null;
     },
@@ -62,7 +62,7 @@ const songSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    deleteSongStart(state, action: PayloadAction<string>) {
+    deleteSongStart(state) {
       state.loading = true;
       state.error = null;
     },

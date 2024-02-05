@@ -34,6 +34,7 @@ function* fetchSongsSaga(): Generator<any, void, any> {
 
 function* addSongSaga(action: PayloadAction<Song>): Generator<any, void, any> {
   try {
+    put(addSongStart());
     const newSong: Song = yield call(addSongApi, action.payload);
     yield put(addSongSuccess(newSong));
   } catch (error: any) {
@@ -45,6 +46,7 @@ function* updateSongSaga(
   action: PayloadAction<Song>
 ): Generator<any, void, any> {
   try {
+    put(updateSongStart());
     const updatedSong: Song = yield call(updateSongApi, action.payload);
     yield put(updateSongSuccess(updatedSong));
   } catch (error: any) {
@@ -56,6 +58,7 @@ function* deleteSongSaga(
   action: PayloadAction<string>
 ): Generator<any, void, any> {
   try {
+    put(deleteSongStart());
     yield call(deleteSongApi, action.payload);
     yield put(deleteSongSuccess(action.payload));
   } catch (error: any) {
