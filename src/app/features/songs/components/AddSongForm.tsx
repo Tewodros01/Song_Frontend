@@ -96,7 +96,6 @@ const ButtonGroup = styled.div`
   margin-top: 1.5rem;
 `;
 
-// validation schema
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   artist: Yup.string().required("Artist is required"),
@@ -104,7 +103,7 @@ const validationSchema = Yup.object().shape({
   genre: Yup.string().required("Genre is required"),
 });
 
-export default function AddSongForm() {
+const AddSongForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -115,10 +114,10 @@ export default function AddSongForm() {
       toast.success("Successfully added new song");
       setSubmitting(false);
       navigate("/songs");
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(`${error.message}`);
       setSubmitting(false);
       setErrors(error);
-      toast.error("Something went wrong");
     }
   };
 
@@ -171,4 +170,6 @@ export default function AddSongForm() {
       </FormContainer>
     </Container>
   );
-}
+};
+
+export default AddSongForm;

@@ -28,7 +28,7 @@ const SongGrid = styled.div`
   overflow-x: hidden;
 `;
 
-const SongCard = styled(Link)`
+const SongCard = styled.div`
   padding: 1.5rem;
   background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -45,8 +45,8 @@ const SongCard = styled(Link)`
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    background-color: #000;
-    color: #fff;
+    background-color: #f0f0f0; /* Lighter color on hover */
+    color: #000; /* Text color on hover */
   }
 `;
 
@@ -61,20 +61,18 @@ const Details = styled.p`
   margin-bottom: 0.5rem;
 `;
 
-const AddNewSong = styled(Link)`
-  position: absolute;
-  top: 6rem;
-  right: 1rem;
-  height: 3.5rem;
-  width: 15rem;
-  padding-left: 2.5rem;
-  border-radius: 1rem;
+const EditButton = styled(Link)`
+  margin-top: 1rem;
+  height: 2rem;
+  width: 7rem;
+  border-radius: 0.5rem;
   border: 1px solid #ccc;
-  font-size: 1rem;
+  font-size: 0.87rem;
   outline: none;
   text-decoration: none;
   display: flex;
   align-items: center;
+  justify-content: center;
   background: #4b0082;
   color: #fff;
 `;
@@ -159,11 +157,12 @@ const SongList = () => {
     content = (
       <SongGrid>
         {filteredSongs.map((song, index) => (
-          <SongCard to={`/edit/${song.id}`} key={index}>
+          <SongCard key={index}>
             <Title>{song.title}</Title>
             <Details>Artist: {song.artist}</Details>
             <Details>Album: {song.album}</Details>
             <Details>Genre: {song.genre}</Details>
+            <EditButton to={`/edit/${song.id}`}>Edit Song</EditButton>
           </SongCard>
         ))}
       </SongGrid>
@@ -172,7 +171,6 @@ const SongList = () => {
 
   return (
     <Container>
-      <AddNewSong to="/newsong">Add new Song</AddNewSong>
       <Description>
         Explore and search through the collection of Songs
       </Description>

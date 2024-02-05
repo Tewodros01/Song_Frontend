@@ -48,8 +48,8 @@ const ArtistCard = styled.div`
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    background-color: #000;
-    color: #fff;
+    background-color: #f0f0f0; /* Lighter color on hover */
+    color: #000; /* Text color on hover */
   }
 `;
 

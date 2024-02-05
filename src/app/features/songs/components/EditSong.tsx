@@ -111,7 +111,6 @@ const ButtonGroup = styled.div`
   margin-top: 1.5rem;
 `;
 
-// Validation schema
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   artist: Yup.string().required("Artist is required"),
