@@ -153,7 +153,7 @@ const EditSongForm: React.FC = () => {
   };
 
   let content;
-  if (id) {
+  if (!id) {
     content = <h1>Song Not Found</h1>;
   } else if (song) {
     content = (
