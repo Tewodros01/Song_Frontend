@@ -31,7 +31,9 @@ const Footer: React.FC = () => {
         <FooterText>&copy; 2024 Song App | All Rights Reserved</FooterText>
         <FooterText>
           Built with love by
-          <FooterLink href="https://songapp.com">Song App</FooterLink>
+          <FooterLink href="https://song-frontend.vercel.app">
+            Song App
+          </FooterLink>
         </FooterText>
       </FooterContainer>
     </PageContainer>
