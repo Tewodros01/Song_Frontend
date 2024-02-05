@@ -77,6 +77,24 @@ const EditButton = styled(Link)`
   color: #fff;
 `;
 
+const AddNewSong = styled(Link)`
+  position: absolute;
+  top: 6rem;
+  right: 1rem;
+  height: 3.5rem;
+  width: 15rem;
+  border-radius: 1rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #4b0082;
+  color: #fff;
+`;
+
 const Description = styled.p`
   font-size: 1.2rem;
   margin-top: 2rem;
@@ -171,6 +189,7 @@ const SongList = () => {
 
   return (
     <Container>
+      <AddNewSong to="/newsong">Add new Song</AddNewSong>
       <Description>
         Explore and search through the collection of Songs
       </Description>
