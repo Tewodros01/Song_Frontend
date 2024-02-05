@@ -57,7 +57,7 @@ export const deleteSongApi = async (songId: string): Promise<string> => {
   }
 };
 
-// Function to fetch all songs
+// Function to fetch all Artisr
 export const fetchSongsArtistApi = async (): Promise<Artist[]> => {
   try {
     const response: AxiosResponse<Artist[]> = await axios.get<Artist[]>(
@@ -70,7 +70,7 @@ export const fetchSongsArtistApi = async (): Promise<Artist[]> => {
   }
 };
 
-// Function to fetch all songs
+// Function to fetch all Songs AlbumApi
 export const fetchSongsAlbumApi = async (): Promise<Album[]> => {
   try {
     const response: AxiosResponse<Album[]> = await axios.get<Album[]>(
