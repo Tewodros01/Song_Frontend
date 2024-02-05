@@ -14,7 +14,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4rem 0;
+  padding-left: 4rem 0;
+  padding-right: 4rem 0;
+  padding-top: 1rem 0;
+  padding-bottom: 4rem 0;
 `;
 
 const AlbumGrid = styled.div`

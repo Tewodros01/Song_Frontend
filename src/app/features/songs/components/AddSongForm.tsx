@@ -1,10 +1,17 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../../../../store/store";
 import { addSongStart } from "../slice/songSlice";
 import styled from "styled-components";
+
+interface FormData {
+  title: string;
+  artist: string;
+  album: string;
+  genre: string;
+}
 
 const Container = styled.section`
   padding: 1rem;
@@ -40,7 +47,7 @@ const Label = styled.label`
   margin-bottom: 0.5rem;
 `;
 
-const Input = styled(Field)`
+const Input = styled.input`
   width: 100%;
   padding: 0.7rem;
   font-size: 1rem;
@@ -48,7 +55,7 @@ const Input = styled(Field)`
   border-radius: 0.25rem;
 `;
 
-const ErrorMessageStyled = styled(ErrorMessage)`
+const ErrorMessageStyled = styled.div`
   font-size: 0.875rem;
   color: #ef4444;
   margin-top: 0.25rem;
@@ -104,21 +111,45 @@ const validationSchema = Yup.object().shape({
   genre: Yup.string().required("Genre is required"),
 });
 
-export default function AddSongForm() {
+const AddSongForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [formData, setFormData] = useState<FormData>({
+    title: "",
+    artist: "",
+    album: "",
+    genre: "",
+  });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
 
   // on submit handler
-  const onSubmit = async (values: any, { setSubmitting, setErrors }: any) => {
+  const onSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
     try {
-      dispatch(addSongStart(values));
+      await validationSchema.validate(formData, { abortEarly: false });
+      dispatch(addSongStart(formData));
       toast.success("Successfully added new song");
-      setSubmitting(false);
       navigate("/songs");
     } catch (error) {
-      setSubmitting(false);
-      setErrors(error);
-      toast.error("Something went wrong");
+      if (error instanceof Yup.ValidationError) {
+        const newErrors: { [key: string]: string } = {};
+        error.inner.forEach((e) => {
+          newErrors[e.path!] = e.message;
+        });
+        setErrors(newErrors);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 
@@ -126,49 +157,63 @@ export default function AddSongForm() {
     <Container>
       <FormContainer>
         <Title>New Song</Title>
-        <Formik
-          initialValues={{
-            title: "",
-            artist: "",
-            album: "",
-            genre: "",
-          }}
-          validationSchema={validationSchema}
-          onSubmit={onSubmit}
-        >
-          <Form>
-            <FormGroup>
-              <Label htmlFor="title">Song Title</Label>
-              <Input type="text" id="title" name="title" placeholder="Title" />
-              <ErrorMessageStyled name="title" component="div" />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="artist">Artist</Label>
-              <Input
-                type="text"
-                id="artist"
-                name="artist"
-                placeholder="Artist"
-              />
-              <ErrorMessageStyled name="artist" component="div" />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="album">Album</Label>
-              <Input type="text" id="album" name="album" placeholder="Album" />
-              <ErrorMessageStyled name="album" component="div" />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="genre">Genre</Label>
-              <Input type="text" id="genre" name="genre" placeholder="Genre" />
-              <ErrorMessageStyled name="genre" component="div" />
-            </FormGroup>
-            <ButtonGroup>
-              <BackButton to="/songs">Back</BackButton>
-              <SubmitButton type="submit">Submit</SubmitButton>
-            </ButtonGroup>
-          </Form>
-        </Formik>
+        <form onSubmit={onSubmit}>
+          <FormGroup>
+            <Label htmlFor="title">Song Title</Label>
+            <Input
+              type="text"
+              id="title"
+              name="title"
+              placeholder="Title"
+              value={formData.title}
+              onChange={handleChange}
+            />
+            <ErrorMessageStyled>{errors.title}</ErrorMessageStyled>
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="artist">Artist</Label>
+            <Input
+              type="text"
+              id="artist"
+              name="artist"
+              placeholder="Artist"
+              value={formData.artist}
+              onChange={handleChange}
+            />
+            <ErrorMessageStyled>{errors.artist}</ErrorMessageStyled>
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="album">Album</Label>
+            <Input
+              type="text"
+              id="album"
+              name="album"
+              placeholder="Album"
+              value={formData.album}
+              onChange={handleChange}
+            />
+            <ErrorMessageStyled>{errors.album}</ErrorMessageStyled>
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="genre">Genre</Label>
+            <Input
+              type="text"
+              id="genre"
+              name="genre"
+              placeholder="Genre"
+              value={formData.genre}
+              onChange={handleChange}
+            />
+            <ErrorMessageStyled>{errors.genre}</ErrorMessageStyled>
+          </FormGroup>
+          <ButtonGroup>
+            <BackButton to="/songs">Back</BackButton>
+            <SubmitButton type="submit">Submit</SubmitButton>
+          </ButtonGroup>
+        </form>
       </FormContainer>
     </Container>
   );
-}
+};
+
+export default AddSongForm;

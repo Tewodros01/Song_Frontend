@@ -66,7 +66,7 @@ const Paragraph = styled.p`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.5rem;
   align-items: center;
   margin-top: 3.5rem;
@@ -113,6 +113,10 @@ const Hero: React.FC = () => {
   } else if (statistics != null) {
     statisticsContent = (
       <Grid>
+        <Stat>
+          <StatNumber>{statistics.totalArtists}</StatNumber>
+          <StatLabel>Artist</StatLabel>
+        </Stat>
         <Stat>
           <StatNumber>{statistics.totalSongs}</StatNumber>
           <StatLabel>Music</StatLabel>
