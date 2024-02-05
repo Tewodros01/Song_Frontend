@@ -111,9 +111,10 @@ const AddSongForm: React.FC = () => {
   const onSubmit = async (values: any, { setSubmitting, setErrors }: any) => {
     try {
       dispatch(addSongStart(values));
-      toast.success("Successfully added new song");
       setSubmitting(false);
+
       navigate("/songs");
+      toast.success("Successfully added new song");
     } catch (error: any) {
       toast.error(`${error.message}`);
       setSubmitting(false);

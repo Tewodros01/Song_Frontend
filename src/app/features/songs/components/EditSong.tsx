@@ -153,7 +153,7 @@ const EditSongForm: React.FC = () => {
     }
   };
 
-  let content = null;
+  let content;
   if (isLoading) {
     content = <h1>loading</h1>;
   } else if (song) {
