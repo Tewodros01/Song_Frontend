@@ -43,7 +43,7 @@ const Content = styled.div`
   text-align: center;
   max-width: 800px;
   margin: auto;
-  color: #333; /* Adjusted text color */
+  color: #333;
 `;
 
 const Title = styled.h1`

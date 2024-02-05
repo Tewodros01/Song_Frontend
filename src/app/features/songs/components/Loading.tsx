@@ -14,8 +14,8 @@ const Container = styled.div`
 `;
 
 const ProgressBar = styled.div`
-  width: 200px; /* Adjust width as needed */
-  height: 20px; /* Adjust height as needed */
+  width: 200px;
+  height: 10px;
   background-color: #f0f0f0;
   border-radius: 10px;
   overflow: hidden;
