@@ -1,9 +1,9 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
 
-const spin = keyframes`
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+const progress = keyframes`
+  0% { width: 0%; }
+  100% { width: 100%; }
 `;
 
 const Container = styled.div`
@@ -13,18 +13,26 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-const Spinner = styled.div`
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-top: 4px solid #007bff;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: ${spin} 1s linear infinite;
+const ProgressBar = styled.div`
+  width: 200px; /* Adjust width as needed */
+  height: 20px; /* Adjust height as needed */
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+`;
+
+const ProgressFill = styled.div`
+  height: 100%;
+  width: 0%;
+  background-color: #007bff;
+  animation: ${progress} 2s linear infinite;
 `;
 
 const Loading: React.FC = () => (
   <Container>
-    <Spinner />
+    <ProgressBar>
+      <ProgressFill />
+    </ProgressBar>
   </Container>
 );
 
