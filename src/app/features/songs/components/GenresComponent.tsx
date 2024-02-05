@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import {
-  getArtistStart,
-  selectArtist,
-  selectError,
-  selectLoading,
-} from "../slice/artistSlice";
 import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import Loading from "./Loading";
-import { Artist } from "../../../../types/artist";
+import {
+  getGenresStart,
+  selectError,
+  selectGenres,
+  selectLoading,
+} from "../slice/genresSlice";
+import { Genre } from "../../../../types/genre";
 
 const Container = styled.div`
   width: 100%;
@@ -21,7 +21,7 @@ const Container = styled.div`
   padding-bottom: 4rem 0;
 `;
 
-const ArtistGrid = styled.div`
+const GenresGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 2rem;
@@ -31,7 +31,7 @@ const ArtistGrid = styled.div`
   overflow-x: hidden;
 `;
 
-const ArtistCard = styled.div`
+const GenresCard = styled.div`
   padding: 1.5rem;
   background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -92,8 +92,10 @@ const SearchInput = styled.input`
   }
 `;
 
-const NoArtistContainer = styled.div`
+const NoGenresContainer = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
@@ -104,15 +106,15 @@ const NoArtistContainer = styled.div`
   border-radius: 0.5rem;
 `;
 
-const ArtistsComponent: React.FC = () => {
+const GenresComponent: React.FC = () => {
   const dispatch = useAppDispatch();
-  const artists = useAppSelector(selectArtist);
+  const genres = useAppSelector(selectGenres);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
   const [searchInput, setSearchInput] = useState<string>("");
 
   useEffect(() => {
-    dispatch(getArtistStart());
+    dispatch(getGenresStart());
   }, [dispatch]);
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,53 +127,62 @@ const ArtistsComponent: React.FC = () => {
     return <Loading />;
   } else if (error) {
     content = (
-      <NoArtistContainer>
+      <NoGenresContainer>
         <h1>{error}</h1>
-      </NoArtistContainer>
+      </NoGenresContainer>
     );
-  } else if (artists.length === 0) {
+  } else if (genres.length === 0) {
     content = (
-      <NoArtistContainer>
-        <h1>No Artist Found</h1>
-      </NoArtistContainer>
+      <NoGenresContainer>
+        <h1>No Genres Found</h1>
+      </NoGenresContainer>
     );
-  } else if (artists.length >= 0) {
-    const filteredArtists = artists.filter((artist: Artist) =>
-      artist.artist.toLowerCase().includes(searchInput.toLowerCase())
+  } else if (genres.length >= 0) {
+    const filteredgenres = genres.filter((Genres: Genre) =>
+      Genres.genre.toLowerCase().includes(searchInput.toLowerCase())
     );
+
     content = (
-      <ArtistGrid>
-        {filteredArtists.length === 0 ? (
-          <NoArtistContainer>No Artist Found</NoArtistContainer>
+      <GenresGrid>
+        {filteredgenres.length === 0 ? (
+          <NoGenresContainer>No Genres Found</NoGenresContainer>
         ) : (
-          filteredArtists.map((item: Artist, index: number) => (
-            <ArtistCard key={index}>
-              <Title>{item.artist}</Title>
-              <Details>Artist: {item.artist}</Details>
+          filteredgenres.map((item: Genre, index: number) => (
+            <GenresCard key={index}>
+              <Title>{item.genre}</Title>
               <Details>Songs: {item.songs}</Details>
-              <Details>Albums: {item.albums}</Details>
-            </ArtistCard>
+              <Details>Artists: {item.numberOfArtists}</Details>
+              <Details>Albums: {item.numberOfAlbums}</Details>
+            </GenresCard>
           ))
         )}
-      </ArtistGrid>
+      </GenresGrid>
+    );
+  }
+
+  if (error) {
+    content = (
+      <NoGenresContainer>
+        <h1>{error}</h1>
+      </NoGenresContainer>
     );
   }
 
   return (
     <Container>
       <Description>
-        Explore and search through the collection of Artist.
+        Explore and search through the collection of Genres.
       </Description>
       <SearchInput
         type="text"
         id="topbar-search"
         value={searchInput}
         onChange={handleSearchInput}
-        placeholder="Search Artists..."
+        placeholder="Search genres..."
       />
       {content}
     </Container>
   );
 };
 
-export default ArtistsComponent;
+export default GenresComponent;

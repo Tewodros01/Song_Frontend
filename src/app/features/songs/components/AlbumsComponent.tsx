@@ -93,6 +93,8 @@ const SearchInput = styled.input`
 
 const NoAlbumContainer = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
@@ -122,6 +124,18 @@ const AlbumsComponent = () => {
 
   if (isLoading) {
     return <Loading />;
+  } else if (error) {
+    content = (
+      <NoAlbumContainer>
+        <h1>{error}</h1>
+      </NoAlbumContainer>
+    );
+  } else if (albums.length === 0) {
+    content = (
+      <NoAlbumContainer>
+        <h1>No Albums Found</h1>
+      </NoAlbumContainer>
+    );
   } else if (albums.length > 0) {
     const filteredAlbums = albums.filter((album) =>
       album.album.toLowerCase().includes(searchInput.toLowerCase())
@@ -145,14 +159,6 @@ const AlbumsComponent = () => {
           ))
         )}
       </AlbumGrid>
-    );
-  }
-
-  if (error) {
-    content = (
-      <NoAlbumContainer>
-        <h1>{error}</h1>
-      </NoAlbumContainer>
     );
   }
 

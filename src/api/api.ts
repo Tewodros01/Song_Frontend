@@ -83,6 +83,19 @@ export const fetchSongsAlbumApi = async (): Promise<Album[]> => {
   }
 };
 
+// Function to fetch Genre
+export const fetchSongsGenresApi = async (): Promise<Album[]> => {
+  try {
+    const response: AxiosResponse<Album[]> = await axios.get<Album[]>(
+      `${API_BASE_URL}/songs/allGenre`
+    );
+    return response.data;
+  } catch (error) {
+    // Handle network errors or response errors
+    throw new Error("Failed to fetch songs. Please try again later.");
+  }
+};
+
 // Function to fetch stastics
 export const fetchstaSticsApi = async (): Promise<Statistics> => {
   try {

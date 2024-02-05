@@ -7,6 +7,7 @@ import AddSongForm from "./features/songs/components/AddSongForm";
 import EditSongForm from "./features/songs/components/EditSong";
 import ArtistsComponent from "./features/songs/components/ArtistsComponent";
 import AlbumsComponent from "./features/songs/components/AlbumsComponent";
+import GenresComponent from "./features/songs/components/GenresComponent";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/newsong" element={<AddSongForm />} />
         <Route path="/artists" element={<ArtistsComponent />} />
         <Route path="/albums" element={<AlbumsComponent />} />
+        <Route path="/genres" element={<GenresComponent />} />
       </Route>
     </Routes>
   );

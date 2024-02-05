@@ -10,12 +10,15 @@ import artistReducer from "../app/features/songs/slice/artistSlice";
 import albumReducer from "../app/features/songs/slice/albumSlice";
 import artistSaga from "../app/features/songs/saga/artistSaga";
 import albumSaga from "../app/features/songs/saga/albumSaga";
+import genresSaga from "../app/features/songs/saga/genersSaga";
+import genresReducer from "../app/features/songs/slice/genresSlice";
 
 const rootReducer = combineReducers({
   songs: songReducer,
   statistics: statisticReducer,
   artist: artistReducer,
   album: albumReducer,
+  genres: genresReducer,
 });
 
 // Create saga middleware
@@ -33,6 +36,7 @@ sagaMiddleware.run(songSaga);
 sagaMiddleware.run(statisticsSaga);
 sagaMiddleware.run(artistSaga);
 sagaMiddleware.run(albumSaga);
+sagaMiddleware.run(genresSaga);
 
 export default store;
 export type AppDispatch = typeof store.dispatch;

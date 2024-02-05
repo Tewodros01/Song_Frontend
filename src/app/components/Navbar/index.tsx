@@ -35,6 +35,7 @@ const Navbar: React.FC = () => {
           <NavLink to="/songs">Songs</NavLink>
           <NavLink to="/artists">Artists</NavLink>
           <NavLink to="/albums">Albums</NavLink>
+          <NavLink to="/genres">Genres</NavLink>
         </NavItems>
         <MobileMenu isOpen={isOpen}>
           <MobileLink to="/" onClick={toggleMenu}>
@@ -48,6 +49,9 @@ const Navbar: React.FC = () => {
           </MobileLink>
           <MobileLink to="/albums" onClick={toggleMenu}>
             Albums
+          </MobileLink>
+          <MobileLink to="/genres" onClick={toggleMenu}>
+            Genres
           </MobileLink>
         </MobileMenu>
       </NavbarContainer>

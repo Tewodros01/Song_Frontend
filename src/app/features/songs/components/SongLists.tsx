@@ -125,10 +125,12 @@ const SearchInput = styled.input`
 
 const NoSongContainer = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  font-size: 1rem;
+  font-size: 0.5rem;
   color: #555;
   padding: 1rem;
   border: 2px dashed #ccc;
@@ -174,15 +176,21 @@ const SongList = () => {
 
     content = (
       <SongGrid>
-        {filteredSongs.map((song, index) => (
-          <SongCard key={index}>
-            <Title>{song.title}</Title>
-            <Details>Artist: {song.artist}</Details>
-            <Details>Album: {song.album}</Details>
-            <Details>Genre: {song.genre}</Details>
-            <EditButton to={`/edit/${song.id}`}>Edit Song</EditButton>
-          </SongCard>
-        ))}
+        {filteredSongs.length === 0 ? (
+          <NoSongContainer>
+            <h1>No Songs Found</h1>
+          </NoSongContainer>
+        ) : (
+          filteredSongs.map((song, index) => (
+            <SongCard key={index}>
+              <Title>{song.title}</Title>
+              <Details>Artist: {song.artist}</Details>
+              <Details>Album: {song.album}</Details>
+              <Details>Genre: {song.genre}</Details>
+              <EditButton to={`/edit/${song.id}`}>Edit Song</EditButton>
+            </SongCard>
+          ))
+        )}
       </SongGrid>
     );
   }

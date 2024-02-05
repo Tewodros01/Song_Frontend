@@ -4,6 +4,11 @@ import { styled } from "styled-components";
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
+  min-height: 50vh;
+`;
+
+const ContentContainer = styled.div`
+  flex: 1;
 `;
 
 const FooterContainer = styled.footer`
@@ -27,13 +32,12 @@ const FooterLink = styled.a`
 const Footer: React.FC = () => {
   return (
     <PageContainer>
+      <ContentContainer></ContentContainer>
       <FooterContainer>
         <FooterText>&copy; 2024 Song App | All Rights Reserved</FooterText>
         <FooterText>
           Built with love by
-          <FooterLink href="https://song-frontend.vercel.app">
-            Song App
-          </FooterLink>
+          <FooterLink href="https://songapp.com">Song App</FooterLink>
         </FooterText>
       </FooterContainer>
     </PageContainer>
