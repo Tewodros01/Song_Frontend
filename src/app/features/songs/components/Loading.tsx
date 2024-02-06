@@ -34,12 +34,12 @@ const ProgressBar = styled.div`
 const ProgressFill = styled.div`
   height: 100%;
   width: 0%;
-  background-color: #4b0082; /* Change color to water-like color */
+  background-color: #4b0082;
   animation: ${progress} 2s linear infinite;
 `;
 
 const LoadingText = styled.div`
-  margin-top: 10px; /* Add margin to separate from progress bar */
+  margin-top: 10px;
 `;
 
 export default Loading;
