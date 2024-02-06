@@ -1,6 +1,23 @@
 import React from "react";
 import { styled } from "styled-components";
 
+const Footer: React.FC = () => {
+  return (
+    <PageContainer>
+      <ContentContainer></ContentContainer>
+      <FooterContainer>
+        <FooterText>&copy; 2024 Song App | All Rights Reserved</FooterText>
+        <FooterText>
+          Built with love by
+          <FooterLink href="https://song-frontend.vercel.app">
+            Song App
+          </FooterLink>
+        </FooterText>
+      </FooterContainer>
+    </PageContainer>
+  );
+};
+
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -28,22 +45,5 @@ const FooterLink = styled.a`
   text-decoration: underline;
   margin-left: 0.5rem;
 `;
-
-const Footer: React.FC = () => {
-  return (
-    <PageContainer>
-      <ContentContainer></ContentContainer>
-      <FooterContainer>
-        <FooterText>&copy; 2024 Song App | All Rights Reserved</FooterText>
-        <FooterText>
-          Built with love by
-          <FooterLink href="https://song-frontend.vercel.app">
-            Song App
-          </FooterLink>
-        </FooterText>
-      </FooterContainer>
-    </PageContainer>
-  );
-};
 
 export default Footer;
