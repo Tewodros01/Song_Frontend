@@ -23,12 +23,12 @@ const statisticSlice = createSlice({
       state.error = null;
     },
     getStatisticsSuccess: (state, action: PayloadAction<Statistics>) => {
-      state.loading = false;
       state.statistics = action.payload;
+      state.loading = false;
     },
     getStatisticsFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
       state.error = action.payload;
+      state.loading = false;
     },
   },
 });
