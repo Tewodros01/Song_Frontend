@@ -97,10 +97,22 @@ const ButtonGroup = styled.div`
 `;
 
 const validationSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required"),
-  artist: Yup.string().required("Artist is required"),
-  album: Yup.string().required("Album is required"),
-  genre: Yup.string().required("Genre is required"),
+  title: Yup.string()
+    .required("Title is required")
+    .min(2, "Title must be at least 2 characters")
+    .max(50, "Title must be at most 50 characters"),
+  artist: Yup.string()
+    .required("Artist is required")
+    .min(2, "Artist must be at least 2 characters")
+    .max(50, "Artist must be at most 50 characters"),
+  album: Yup.string()
+    .required("Album is required")
+    .min(2, "Album must be at least 2 characters")
+    .max(50, "Album must be at most 50 characters"),
+  genre: Yup.string()
+    .required("Genre is required")
+    .min(2, "Genre must be at least 2 characters")
+    .max(50, "Genre must be at most 50 characters"),
 });
 
 const AddSongForm: React.FC = () => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import {
   getAlbumStart,
@@ -14,10 +14,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-left: 4rem 0;
-  padding-right: 4rem 0;
-  padding-top: 1rem 0;
-  padding-bottom: 4rem 0;
+  padding: 1rem 4rem 4rem;
 `;
 
 const AlbumGrid = styled.div`
@@ -27,7 +24,6 @@ const AlbumGrid = styled.div`
   width: 80%;
   max-width: 1200px;
   margin-bottom: 2rem;
-  overflow-x: hidden;
 `;
 
 const AlbumCard = styled.div`
@@ -96,7 +92,6 @@ const NoAlbumContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  align-items: center;
   gap: 1rem;
   font-size: 0.5rem;
   color: #555;
@@ -116,6 +111,12 @@ const AlbumsComponent = () => {
     dispatch(getAlbumStart());
   }, [dispatch]);
 
+  const filteredAlbums = useMemo(() => {
+    return albums.filter((album) =>
+      album.album.toLowerCase().includes(searchInput.toLowerCase())
+    );
+  }, [albums, searchInput]);
+
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
   };
@@ -130,35 +131,25 @@ const AlbumsComponent = () => {
         <h1>{error}</h1>
       </NoAlbumContainer>
     );
-  } else if (albums.length === 0) {
+  } else if (filteredAlbums.length === 0) {
     content = (
       <NoAlbumContainer>
         <h1>No Albums Found</h1>
       </NoAlbumContainer>
     );
-  } else if (albums.length > 0) {
-    const filteredAlbums = albums.filter((album) =>
-      album.album.toLowerCase().includes(searchInput.toLowerCase())
+  } else {
+    content = (
+      <AlbumGrid>
+        {filteredAlbums.map((item, index) => (
+          <AlbumCard key={index}>
+            <Title>{item.album}</Title>
+            <Details>Artist: {item.artist}</Details>
+            <Details>Song: {item.songs}</Details>
+            <Details>Album: {item.album}</Details>
+          </AlbumCard>
+        ))}
+      </AlbumGrid>
     );
-
-    content =
-      filteredAlbums.length === 0 ? (
-        <NoAlbumContainer>
-          <h1>No Album Found</h1>
-        </NoAlbumContainer>
-      ) : (
-        <AlbumGrid>
-          {filteredAlbums.map((item, index) => (
-            <AlbumCard key={index}>
-              <Title>{item.album}</Title>
-
-              <Details>Artist: {item.artist}</Details>
-              <Details>Song: {item.songs}</Details>
-              <Details>Album: {item.album}</Details>
-            </AlbumCard>
-          ))}
-        </AlbumGrid>
-      );
   }
 
   return (
