@@ -44,7 +44,7 @@ const EditSongForm: React.FC = () => {
       if (!song) return;
       const updatedSong = { ...song, ...values };
       dispatch(updateSongStart(updatedSong));
-      toast.update("Your changes have been saved successfully");
+      toast.success("Your changes have been saved successfully");
       navigate("/songs");
     } catch (error: any) {
       toast.error(error.message);
