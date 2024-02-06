@@ -24,7 +24,7 @@ const SongList = () => {
 
   const filteredSongs = useMemo(() => {
     return songs.filter((song) =>
-      song.title?.toUpperCase().includes(searchInput.toLocaleUpperCase())
+      song.title?.toUpperCase().includes(searchInput.toUpperCase())
     );
   }, [songs, searchInput]);
 
@@ -35,7 +35,7 @@ const SongList = () => {
   let content;
 
   if (isLoading) {
-    return <Loading />;
+    return (content = <Loading />);
   } else if (error) {
     content = (
       <NoSongContainer>
