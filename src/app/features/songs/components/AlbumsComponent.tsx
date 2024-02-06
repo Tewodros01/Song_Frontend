@@ -9,6 +9,75 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import Loading from "./Loading";
 
+const AlbumsComponent = () => {
+  const dispatch = useAppDispatch();
+  const albums = useAppSelector(selectAlbum);
+  const isLoading = useAppSelector(selectLoading);
+  const error = useAppSelector(selectError);
+  const [searchInput, setSearchInput] = useState("");
+
+  useEffect(() => {
+    dispatch(getAlbumStart());
+  }, [dispatch]);
+
+  const filteredAlbums = useMemo(() => {
+    return albums.filter((album) =>
+      album.album.toLowerCase().includes(searchInput.toLowerCase())
+    );
+  }, [albums, searchInput]);
+
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value);
+  };
+
+  let content;
+
+  if (isLoading) {
+    return <Loading />;
+  } else if (error) {
+    content = (
+      <NoAlbumContainer>
+        <h1>{error}</h1>
+      </NoAlbumContainer>
+    );
+  } else if (filteredAlbums.length === 0) {
+    content = (
+      <NoAlbumContainer>
+        <h1>No Albums Found</h1>
+      </NoAlbumContainer>
+    );
+  } else {
+    content = (
+      <AlbumGrid>
+        {filteredAlbums.map((item, index) => (
+          <AlbumCard key={index}>
+            <Title>{item.album}</Title>
+            <Details>Artist: {item.artist}</Details>
+            <Details>Song: {item.songs}</Details>
+            <Details>Album: {item.album}</Details>
+          </AlbumCard>
+        ))}
+      </AlbumGrid>
+    );
+  }
+
+  return (
+    <Container>
+      <Description>
+        Explore and search through the collection of albums.
+      </Description>
+      <SearchInput
+        type="text"
+        id="topbar-search"
+        value={searchInput}
+        onChange={handleSearchInput}
+        placeholder="Search Albums..."
+      />
+      {content}
+    </Container>
+  );
+};
+
 const Container = styled.div`
   width: 100%;
   display: flex;
@@ -99,74 +168,5 @@ const NoAlbumContainer = styled.div`
   border: 2px dashed #ccc;
   border-radius: 0.5rem;
 `;
-
-const AlbumsComponent = () => {
-  const dispatch = useAppDispatch();
-  const albums = useAppSelector(selectAlbum);
-  const isLoading = useAppSelector(selectLoading);
-  const error = useAppSelector(selectError);
-  const [searchInput, setSearchInput] = useState("");
-
-  useEffect(() => {
-    dispatch(getAlbumStart());
-  }, [dispatch]);
-
-  const filteredAlbums = useMemo(() => {
-    return albums.filter((album) =>
-      album.album.toLowerCase().includes(searchInput.toLowerCase())
-    );
-  }, [albums, searchInput]);
-
-  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(event.target.value);
-  };
-
-  let content;
-
-  if (isLoading) {
-    return <Loading />;
-  } else if (error) {
-    content = (
-      <NoAlbumContainer>
-        <h1>{error}</h1>
-      </NoAlbumContainer>
-    );
-  } else if (filteredAlbums.length === 0) {
-    content = (
-      <NoAlbumContainer>
-        <h1>No Albums Found</h1>
-      </NoAlbumContainer>
-    );
-  } else {
-    content = (
-      <AlbumGrid>
-        {filteredAlbums.map((item, index) => (
-          <AlbumCard key={index}>
-            <Title>{item.album}</Title>
-            <Details>Artist: {item.artist}</Details>
-            <Details>Song: {item.songs}</Details>
-            <Details>Album: {item.album}</Details>
-          </AlbumCard>
-        ))}
-      </AlbumGrid>
-    );
-  }
-
-  return (
-    <Container>
-      <Description>
-        Explore and search through the collection of albums.
-      </Description>
-      <SearchInput
-        type="text"
-        id="topbar-search"
-        value={searchInput}
-        onChange={handleSearchInput}
-        placeholder="Search Albums..."
-      />
-      {content}
-    </Container>
-  );
-};
 
 export default AlbumsComponent;

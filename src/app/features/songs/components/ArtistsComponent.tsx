@@ -10,6 +10,71 @@ import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import Loading from "./Loading";
 import { Artist } from "../../../../types/artist";
 
+const ArtistsComponent: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const artists = useAppSelector(selectArtist);
+  const isLoading = useAppSelector(selectLoading);
+  const error = useAppSelector(selectError);
+  const [searchInput, setSearchInput] = useState<string>("");
+
+  useEffect(() => {
+    dispatch(getArtistStart());
+  }, [dispatch]);
+
+  const filteredArtists = useMemo(() => {
+    return artists.filter((artist: Artist) =>
+      artist.artist.toLowerCase().includes(searchInput.toLowerCase())
+    );
+  }, [artists, searchInput]);
+
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value);
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <NoArtistContainer>
+          <h1>{error}</h1>
+        </NoArtistContainer>
+      </Container>
+    );
+  }
+
+  return (
+    <Container>
+      <Description>
+        Explore and search through the collection of Artist.
+      </Description>
+      <SearchInput
+        type="text"
+        id="topbar-search"
+        value={searchInput}
+        onChange={handleSearchInput}
+        placeholder="Search Artists..."
+      />
+      {filteredArtists.length === 0 ? (
+        <NoArtistContainer>No Artist Found</NoArtistContainer>
+      ) : (
+        <ArtistGrid>
+          {filteredArtists.map((item: Artist, index: number) => (
+            <ArtistCard key={index}>
+              <Title>{item.artist}</Title>
+              <Details>Artist: {item.artist}</Details>
+              <Details>Songs: {item.songs}</Details>
+              <Details>Albums: {item.albums}</Details>
+            </ArtistCard>
+          ))}
+        </ArtistGrid>
+      )}
+    </Container>
+  );
+};
+
 const Container = styled.div`
   width: 100%;
   display: flex;
@@ -99,70 +164,5 @@ const NoArtistContainer = styled.div`
   border: 2px dashed #ccc;
   border-radius: 0.5rem;
 `;
-
-const ArtistsComponent: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const artists = useAppSelector(selectArtist);
-  const isLoading = useAppSelector(selectLoading);
-  const error = useAppSelector(selectError);
-  const [searchInput, setSearchInput] = useState<string>("");
-
-  useEffect(() => {
-    dispatch(getArtistStart());
-  }, [dispatch]);
-
-  const filteredArtists = useMemo(() => {
-    return artists.filter((artist: Artist) =>
-      artist.artist.toLowerCase().includes(searchInput.toLowerCase())
-    );
-  }, [artists, searchInput]);
-
-  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(event.target.value);
-  };
-
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return (
-      <Container>
-        <NoArtistContainer>
-          <h1>{error}</h1>
-        </NoArtistContainer>
-      </Container>
-    );
-  }
-
-  return (
-    <Container>
-      <Description>
-        Explore and search through the collection of Artist.
-      </Description>
-      <SearchInput
-        type="text"
-        id="topbar-search"
-        value={searchInput}
-        onChange={handleSearchInput}
-        placeholder="Search Artists..."
-      />
-      {filteredArtists.length === 0 ? (
-        <NoArtistContainer>No Artist Found</NoArtistContainer>
-      ) : (
-        <ArtistGrid>
-          {filteredArtists.map((item: Artist, index: number) => (
-            <ArtistCard key={index}>
-              <Title>{item.artist}</Title>
-              <Details>Artist: {item.artist}</Details>
-              <Details>Songs: {item.songs}</Details>
-              <Details>Albums: {item.albums}</Details>
-            </ArtistCard>
-          ))}
-        </ArtistGrid>
-      )}
-    </Container>
-  );
-};
 
 export default ArtistsComponent;

@@ -1,6 +1,15 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
 
+const Loading: React.FC = () => (
+  <Container>
+    <LoadingText>Loading...</LoadingText>
+    <ProgressBar>
+      <ProgressFill />
+    </ProgressBar>
+  </Container>
+);
+
 const progress = keyframes`
   0% { width: 0%; }
   100% { width: 100%; }
@@ -32,14 +41,5 @@ const ProgressFill = styled.div`
 const LoadingText = styled.div`
   margin-top: 10px; /* Add margin to separate from progress bar */
 `;
-
-const Loading: React.FC = () => (
-  <Container>
-    <LoadingText>Loading...</LoadingText>
-    <ProgressBar>
-      <ProgressFill />
-    </ProgressBar>
-  </Container>
-);
 
 export default Loading;

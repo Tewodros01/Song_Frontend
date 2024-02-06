@@ -11,105 +11,6 @@ import {
 } from "../slice/songSlice";
 import styled from "styled-components";
 
-const Container = styled.section`
-  padding: 1rem;
-  background-color: #f3f4f6;
-`;
-
-const FormContainer = styled.div`
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto;
-  background-color: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-`;
-
-const Title = styled.h6`
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #374151;
-  margin-bottom: 1.5rem;
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
-const Label = styled.label`
-  font-size: 0.875rem;
-  font-weight: bold;
-  color: #4b5563;
-  display: block;
-  margin-bottom: 0.5rem;
-`;
-
-const Input = styled(Field)`
-  width: 100%;
-  padding: 0.7rem;
-  font-size: 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.25rem;
-`;
-
-const ErrorMessageStyled = styled(ErrorMessage)`
-  font-size: 0.875rem;
-  color: #ef4444;
-  margin-top: 0.25rem;
-`;
-
-const ButtonBase = styled.button`
-  color: white;
-  font-size: 1rem;
-  font-weight: bold;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-`;
-
-const SubmitButton = styled(ButtonBase)`
-  background-color: #4b0082;
-
-  &:hover {
-    background-color: #36414f;
-    color: #fff;
-  }
-`;
-
-const DeleteButton = styled(ButtonBase)`
-  background-color: #d9534f;
-
-  &:hover {
-    background-color: #c9302c;
-    color: #fff;
-  }
-`;
-
-const BackButton = styled(Link)`
-  background-color: #d1d5db;
-  color: #4b5563;
-  font-size: 1rem;
-  font-weight: bold;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #9ca3af;
-  }
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1.5rem;
-`;
-
 const validationSchema = Yup.object().shape({
   title: Yup.string()
     .required("Title is required")
@@ -218,5 +119,104 @@ const EditSongForm: React.FC = () => {
     </Container>
   );
 };
+
+const Container = styled.section`
+  padding: 1rem;
+  background-color: #f3f4f6;
+`;
+
+const FormContainer = styled.div`
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+`;
+
+const Title = styled.h6`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #374151;
+  margin-bottom: 1.5rem;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 1.5rem;
+`;
+
+const Label = styled.label`
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: #4b5563;
+  display: block;
+  margin-bottom: 0.5rem;
+`;
+
+const Input = styled(Field)`
+  width: 100%;
+  padding: 0.7rem;
+  font-size: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+`;
+
+const ErrorMessageStyled = styled(ErrorMessage)`
+  font-size: 0.875rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+`;
+
+const ButtonBase = styled.button`
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+`;
+
+const SubmitButton = styled(ButtonBase)`
+  background-color: #4b0082;
+
+  &:hover {
+    background-color: #36414f;
+    color: #fff;
+  }
+`;
+
+const DeleteButton = styled(ButtonBase)`
+  background-color: #d9534f;
+
+  &:hover {
+    background-color: #c9302c;
+    color: #fff;
+  }
+`;
+
+const BackButton = styled(Link)`
+  background-color: #d1d5db;
+  color: #4b5563;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #9ca3af;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+`;
 
 export default EditSongForm;

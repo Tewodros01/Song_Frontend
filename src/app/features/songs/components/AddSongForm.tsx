@@ -6,6 +6,93 @@ import { useAppDispatch } from "../../../../store/store";
 import { addSongStart } from "../slice/songSlice";
 import styled from "styled-components";
 
+const validationSchema = Yup.object().shape({
+  title: Yup.string()
+    .required("Title is required")
+    .min(2, "Title must be at least 2 characters")
+    .max(50, "Title must be at most 50 characters"),
+  artist: Yup.string()
+    .required("Artist is required")
+    .min(2, "Artist must be at least 2 characters")
+    .max(50, "Artist must be at most 50 characters"),
+  album: Yup.string()
+    .required("Album is required")
+    .min(2, "Album must be at least 2 characters")
+    .max(50, "Album must be at most 50 characters"),
+  genre: Yup.string()
+    .required("Genre is required")
+    .min(2, "Genre must be at least 2 characters")
+    .max(50, "Genre must be at most 50 characters"),
+});
+
+const AddSongForm: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const onSubmit = async (values: any, { setSubmitting, setErrors }: any) => {
+    try {
+      dispatch(addSongStart(values));
+      setSubmitting(false);
+      navigate("/songs");
+      toast.success("Success! Your new song have been saved");
+    } catch (error: any) {
+      toast.error(`${error.message}`);
+      setSubmitting(false);
+      setErrors(error);
+    }
+  };
+
+  return (
+    <Container>
+      <FormContainer>
+        <Title>New Song</Title>
+        <Formik
+          initialValues={{
+            title: "",
+            artist: "",
+            album: "",
+            genre: "",
+          }}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          <Form>
+            <FormGroup>
+              <Label htmlFor="title">Song Title</Label>
+              <Input type="text" id="title" name="title" placeholder="Title" />
+              <ErrorMessageStyled name="title" component="div" />
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="artist">Artist</Label>
+              <Input
+                type="text"
+                id="artist"
+                name="artist"
+                placeholder="Artist"
+              />
+              <ErrorMessageStyled name="artist" component="div" />
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="album">Album</Label>
+              <Input type="text" id="album" name="album" placeholder="Album" />
+              <ErrorMessageStyled name="album" component="div" />
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="genre">Genre</Label>
+              <Input type="text" id="genre" name="genre" placeholder="Genre" />
+              <ErrorMessageStyled name="genre" component="div" />
+            </FormGroup>
+            <ButtonGroup>
+              <BackButton to="/songs">Back</BackButton>
+              <SubmitButton type="submit">Submit</SubmitButton>
+            </ButtonGroup>
+          </Form>
+        </Formik>
+      </FormContainer>
+    </Container>
+  );
+};
+
 const Container = styled.section`
   padding: 1rem;
   background-color: #f3f4f6;
@@ -95,93 +182,5 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
   margin-top: 1.5rem;
 `;
-
-const validationSchema = Yup.object().shape({
-  title: Yup.string()
-    .required("Title is required")
-    .min(2, "Title must be at least 2 characters")
-    .max(50, "Title must be at most 50 characters"),
-  artist: Yup.string()
-    .required("Artist is required")
-    .min(2, "Artist must be at least 2 characters")
-    .max(50, "Artist must be at most 50 characters"),
-  album: Yup.string()
-    .required("Album is required")
-    .min(2, "Album must be at least 2 characters")
-    .max(50, "Album must be at most 50 characters"),
-  genre: Yup.string()
-    .required("Genre is required")
-    .min(2, "Genre must be at least 2 characters")
-    .max(50, "Genre must be at most 50 characters"),
-});
-
-const AddSongForm: React.FC = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-
-  // on submit handler
-  const onSubmit = async (values: any, { setSubmitting, setErrors }: any) => {
-    try {
-      dispatch(addSongStart(values));
-      setSubmitting(false);
-      navigate("/songs");
-      toast.success("Success! Your new song have been saved");
-    } catch (error: any) {
-      toast.error(`${error.message}`);
-      setSubmitting(false);
-      setErrors(error);
-    }
-  };
-
-  return (
-    <Container>
-      <FormContainer>
-        <Title>New Song</Title>
-        <Formik
-          initialValues={{
-            title: "",
-            artist: "",
-            album: "",
-            genre: "",
-          }}
-          validationSchema={validationSchema}
-          onSubmit={onSubmit}
-        >
-          <Form>
-            <FormGroup>
-              <Label htmlFor="title">Song Title</Label>
-              <Input type="text" id="title" name="title" placeholder="Title" />
-              <ErrorMessageStyled name="title" component="div" />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="artist">Artist</Label>
-              <Input
-                type="text"
-                id="artist"
-                name="artist"
-                placeholder="Artist"
-              />
-              <ErrorMessageStyled name="artist" component="div" />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="album">Album</Label>
-              <Input type="text" id="album" name="album" placeholder="Album" />
-              <ErrorMessageStyled name="album" component="div" />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="genre">Genre</Label>
-              <Input type="text" id="genre" name="genre" placeholder="Genre" />
-              <ErrorMessageStyled name="genre" component="div" />
-            </FormGroup>
-            <ButtonGroup>
-              <BackButton to="/songs">Back</BackButton>
-              <SubmitButton type="submit">Submit</SubmitButton>
-            </ButtonGroup>
-          </Form>
-        </Formik>
-      </FormContainer>
-    </Container>
-  );
-};
 
 export default AddSongForm;
