@@ -1,25 +1,15 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "styled-components";
-import {
-  getArtistStart,
-  selectArtist,
-  selectError,
-  selectLoading,
-} from "../slice/artistSlice";
-import { useAppDispatch, useAppSelector } from "../../../../store/store";
+import { selectArtist, selectError, selectLoading } from "../slice/artistSlice";
+import { useAppSelector } from "../../../../store/store";
 import Loading from "./Loading";
 import { Artist } from "../../../../types/artist";
 
 const ArtistsComponent: React.FC = () => {
-  const dispatch = useAppDispatch();
   const artists = useAppSelector(selectArtist);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
   const [searchInput, setSearchInput] = useState<string>("");
-
-  useEffect(() => {
-    dispatch(getArtistStart());
-  }, [dispatch]);
 
   const filteredArtists = useMemo(() => {
     return artists.filter((artist: Artist) =>

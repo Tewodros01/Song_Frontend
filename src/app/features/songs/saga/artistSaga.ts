@@ -15,6 +15,7 @@ function* fetchArtist(): Generator<any, void, any> {
     yield put(getArtistFailure(error.message));
   }
 }
+
 function* artistSaga() {
   yield takeEvery("artists/getArtistStart", fetchArtist);
 }

@@ -1,25 +1,15 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "styled-components";
-import {
-  getGenresStart,
-  selectError,
-  selectGenres,
-  selectLoading,
-} from "../slice/genresSlice";
-import { useAppDispatch, useAppSelector } from "../../../../store/store";
+import { selectError, selectGenres, selectLoading } from "../slice/genresSlice";
+import { useAppSelector } from "../../../../store/store";
 import Loading from "./Loading";
 import { Genre } from "../../../../types/genre";
 
 const GenresComponent: React.FC = () => {
-  const dispatch = useAppDispatch();
   const genres = useAppSelector(selectGenres);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
   const [searchInput, setSearchInput] = useState<string>("");
-
-  useEffect(() => {
-    dispatch(getGenresStart());
-  }, [dispatch]);
 
   const filteredGenres = useMemo(() => {
     return genres.filter((genre: Genre) =>

@@ -1,27 +1,18 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "styled-components";
-import {
-  getAlbumStart,
-  selectAlbum,
-  selectError,
-  selectLoading,
-} from "../slice/albumSlice";
-import { useAppDispatch, useAppSelector } from "../../../../store/store";
+import { selectAlbum, selectError, selectLoading } from "../slice/albumSlice";
+import { useAppSelector } from "../../../../store/store";
+import { Album } from "../../../../types/album";
 import Loading from "./Loading";
 
 const AlbumsComponent = () => {
-  const dispatch = useAppDispatch();
   const albums = useAppSelector(selectAlbum);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
   const [searchInput, setSearchInput] = useState("");
 
-  useEffect(() => {
-    dispatch(getAlbumStart());
-  }, [dispatch]);
-
   const filteredAlbums = useMemo(() => {
-    return albums.filter((album) =>
+    return albums.filter((album: Album) =>
       album.album.toLowerCase().includes(searchInput.toLowerCase())
     );
   }, [albums, searchInput]);

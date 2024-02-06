@@ -1,26 +1,16 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import {
-  selectSongs,
-  selectLoading,
-  selectError,
-  fetchSongsStart,
-} from "../slice/songSlice";
-import { useAppDispatch, useAppSelector } from "../../../../store/store";
+import { selectSongs, selectLoading, selectError } from "../slice/songSlice";
+import { useAppSelector } from "../../../../store/store";
 import Loading from "./Loading";
 
 const SongList = () => {
-  const dispatch = useAppDispatch();
   const songs = useAppSelector(selectSongs);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
 
   const [searchInput, setSearchInput] = useState("");
-
-  useEffect(() => {
-    dispatch(fetchSongsStart());
-  }, [dispatch]);
 
   const filteredSongs = useMemo(() => {
     return songs.filter((song) =>
