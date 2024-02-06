@@ -25,8 +25,9 @@ const SongList = () => {
   let content;
 
   if (isLoading) {
-    return (content = <Loading />);
-  } else if (error) {
+    return <Loading />;
+  }
+  if (error) {
     content = (
       <NoSongContainer>
         <h1>{error}</h1>
