@@ -144,7 +144,7 @@ const EditSongForm: React.FC = () => {
     try {
       if (!id) return;
       dispatch(deleteSongStart(id));
-      toast.success("Song deleted successfully");
+      toast.success("Success! Your changes have been saved");
       navigate("/songs");
     } catch (error: any) {
       toast.error(error.message);

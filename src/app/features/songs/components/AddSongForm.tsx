@@ -113,7 +113,7 @@ const AddSongForm: React.FC = () => {
       dispatch(addSongStart(values));
       setSubmitting(false);
       navigate("/songs");
-      toast.success("Successfully added new song");
+      toast.success("Success! Your new song have been saved");
     } catch (error: any) {
       toast.error(`${error.message}`);
       setSubmitting(false);
