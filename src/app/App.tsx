@@ -9,7 +9,7 @@ import AlbumsComponentWrapper from "./features/songs/components/AlbumsComponentW
 import GenresComponentWrapper from "./features/songs/components/GenresComponentWrapper";
 import SongListsComponentWrapper from "./features/songs/components/SongListsComponentWrapper";
 
-function App() {
+const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -23,6 +23,6 @@ function App() {
       </Route>
     </Routes>
   );
-}
+};
 
 export default App;
