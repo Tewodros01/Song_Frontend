@@ -22,12 +22,12 @@ const albumSlice = createSlice({
       state.error = null;
     },
     getAlbumSuccess: (state, action: PayloadAction<Album[]>) => {
-      state.loading = false;
       state.albums = action.payload;
+      state.loading = false;
     },
     getAlbumFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
       state.error = action.payload;
+      state.loading = false;
     },
   },
 });

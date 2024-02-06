@@ -22,12 +22,12 @@ const artistSlice = createSlice({
       state.error = null;
     },
     getArtistSuccess: (state, action: PayloadAction<Artist[]>) => {
-      state.loading = false;
       state.artists = action.payload;
+      state.loading = false;
     },
     getArtistFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
       state.error = action.payload;
+      state.loading = false;
     },
   },
 });

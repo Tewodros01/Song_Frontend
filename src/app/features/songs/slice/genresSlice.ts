@@ -22,12 +22,12 @@ const genresSlice = createSlice({
       state.error = null;
     },
     getGenresSuccess: (state, action: PayloadAction<Genre[]>) => {
-      state.loading = false;
       state.genres = action.payload;
+      state.loading = false;
     },
     getGenresFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
       state.error = action.payload;
+      state.loading = false;
     },
   },
 });
