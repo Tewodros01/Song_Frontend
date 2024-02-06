@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import {
   getArtistStart,
@@ -15,10 +15,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-left: 4rem 0;
-  padding-right: 4rem 0;
-  padding-top: 1rem 0;
-  padding-bottom: 4rem 0;
+  padding: 1rem 4rem 4rem;
 `;
 
 const ArtistGrid = styled.div`
@@ -28,7 +25,6 @@ const ArtistGrid = styled.div`
   width: 80%;
   max-width: 1200px;
   margin-bottom: 2rem;
-  overflow-x: hidden;
 `;
 
 const ArtistCard = styled.div`
@@ -115,6 +111,12 @@ const ArtistsComponent: React.FC = () => {
     dispatch(getArtistStart());
   }, [dispatch]);
 
+  const filteredArtists = useMemo(() => {
+    return artists.filter((artist: Artist) =>
+      artist.artist.toLowerCase().includes(searchInput.toLowerCase())
+    );
+  }, [artists, searchInput]);
+
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
   };
@@ -132,10 +134,6 @@ const ArtistsComponent: React.FC = () => {
       </Container>
     );
   }
-
-  const filteredArtists = artists.filter((artist: Artist) =>
-    artist.artist.toLowerCase().includes(searchInput.toLowerCase())
-  );
 
   return (
     <Container>

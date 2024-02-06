@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
-import { useAppDispatch, useAppSelector } from "../../../../store/store";
-import Loading from "./Loading";
 import {
   getGenresStart,
   selectError,
   selectGenres,
   selectLoading,
 } from "../slice/genresSlice";
+import { useAppDispatch, useAppSelector } from "../../../../store/store";
+import Loading from "./Loading";
 import { Genre } from "../../../../types/genre";
 
 const Container = styled.div`
@@ -15,10 +15,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-left: 4rem 0;
-  padding-right: 4rem 0;
-  padding-top: 1rem 0;
-  padding-bottom: 4rem 0;
+  padding: 1rem 4rem 4rem;
 `;
 
 const GenresGrid = styled.div`
@@ -28,7 +25,6 @@ const GenresGrid = styled.div`
   width: 80%;
   max-width: 1200px;
   margin-bottom: 2rem;
-  overflow-x: hidden;
 `;
 
 const GenresCard = styled.div`
@@ -97,7 +93,6 @@ const NoGenresContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  align-items: center;
   gap: 1rem;
   font-size: 1rem;
   color: #555;
@@ -117,46 +112,28 @@ const GenresComponent: React.FC = () => {
     dispatch(getGenresStart());
   }, [dispatch]);
 
+  const filteredGenres = useMemo(() => {
+    return genres.filter((genre: Genre) =>
+      genre.genre.toLowerCase().includes(searchInput.toLowerCase())
+    );
+  }, [genres, searchInput]);
+
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
   };
 
-  let content;
-
   if (isLoading) {
     return <Loading />;
-  } else if (error) {
-    content = (
-      <NoGenresContainer>
-        <h1>{error}</h1>
-      </NoGenresContainer>
-    );
-  } else if (genres.length === 0) {
-    content = (
-      <NoGenresContainer>
-        <h1>No Genres Found</h1>
-      </NoGenresContainer>
-    );
-  } else if (genres.length >= 0) {
-    const filteredgenres = genres.filter((Genres: Genre) =>
-      Genres.genre.toLowerCase().includes(searchInput.toLowerCase())
-    );
+  }
 
-    content =
-      filteredgenres.length === 0 ? (
-        <NoGenresContainer>No Genres Found</NoGenresContainer>
-      ) : (
-        <GenresGrid>
-          {filteredgenres.map((item: Genre, index: number) => (
-            <GenresCard key={index}>
-              <Title>{item.genre}</Title>
-              <Details>Songs: {item.songs}</Details>
-              <Details>Artists: {item.numberOfArtists}</Details>
-              <Details>Albums: {item.numberOfAlbums}</Details>
-            </GenresCard>
-          ))}
-        </GenresGrid>
-      );
+  if (error) {
+    return (
+      <Container>
+        <NoGenresContainer>
+          <h1>{error}</h1>
+        </NoGenresContainer>
+      </Container>
+    );
   }
 
   return (
@@ -171,7 +148,20 @@ const GenresComponent: React.FC = () => {
         onChange={handleSearchInput}
         placeholder="Search genres..."
       />
-      {content}
+      {filteredGenres.length === 0 ? (
+        <NoGenresContainer>No Genres Found</NoGenresContainer>
+      ) : (
+        <GenresGrid>
+          {filteredGenres.map((item: Genre, index: number) => (
+            <GenresCard key={index}>
+              <Title>{item.genre}</Title>
+              <Details>Songs: {item.songs}</Details>
+              <Details>Artists: {item.numberOfArtists}</Details>
+              <Details>Albums: {item.numberOfAlbums}</Details>
+            </GenresCard>
+          ))}
+        </GenresGrid>
+      )}
     </Container>
   );
 };

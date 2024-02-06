@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -25,7 +25,6 @@ const SongGrid = styled.div`
   width: 80%;
   max-width: 1200px;
   margin-bottom: 2rem;
-  overflow-x: hidden;
 `;
 
 const SongCard = styled.div`
@@ -149,6 +148,12 @@ const SongList = () => {
     dispatch(fetchSongsStart());
   }, [dispatch]);
 
+  const filteredSongs = useMemo(() => {
+    return songs.filter((song) =>
+      song.title?.toUpperCase().includes(searchInput.toLocaleUpperCase())
+    );
+  }, [songs, searchInput]);
+
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
   };
@@ -156,42 +161,33 @@ const SongList = () => {
   let content;
 
   if (isLoading) {
-    return (content = <Loading />);
+    return <Loading />;
   } else if (error) {
     content = (
       <NoSongContainer>
         <h1>{error}</h1>
       </NoSongContainer>
     );
-  } else if (songs.length === 0) {
+  } else if (filteredSongs.length === 0) {
     content = (
       <NoSongContainer>
-        <h1>No Music Found</h1>
+        <h1>No Songs Found</h1>
       </NoSongContainer>
     );
   } else {
-    const filteredSongs = songs.filter((song) =>
-      song.title?.toUpperCase().includes(searchInput.toLocaleUpperCase())
+    content = (
+      <SongGrid>
+        {filteredSongs.map((song, index) => (
+          <SongCard key={index}>
+            <Title>{song.title}</Title>
+            <Details>Artist: {song.artist}</Details>
+            <Details>Album: {song.album}</Details>
+            <Details>Genre: {song.genre}</Details>
+            <EditButton to={`/edit/${song.id}`}>Edit Song</EditButton>
+          </SongCard>
+        ))}
+      </SongGrid>
     );
-
-    content =
-      filteredSongs.length === 0 ? (
-        <NoSongContainer>
-          <h1>No Songs Found</h1>
-        </NoSongContainer>
-      ) : (
-        <SongGrid>
-          {filteredSongs.map((song, index) => (
-            <SongCard key={index}>
-              <Title>{song.title}</Title>
-              <Details>Artist: {song.artist}</Details>
-              <Details>Album: {song.album}</Details>
-              <Details>Genre: {song.genre}</Details>
-              <EditButton to={`/edit/${song.id}`}>Edit Song</EditButton>
-            </SongCard>
-          ))}
-        </SongGrid>
-      );
   }
 
   return (
