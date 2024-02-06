@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "./components/Layout";
 import NotFoundPage from "./components/NotFoundPage";
+import Loading from "./features/songs/components/Loading";
 
 const Home = lazy(() => import("./features/Home/components/Home"));
 const AddSongForm = lazy(
@@ -29,7 +30,7 @@ const App: React.FC = () => {
         <Route
           index
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loading />}>
               <Home />
             </Suspense>
           }
@@ -37,7 +38,7 @@ const App: React.FC = () => {
         <Route
           path="/songs"
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loading />}>
               <SongListsComponentWrapper />
             </Suspense>
           }
@@ -45,7 +46,7 @@ const App: React.FC = () => {
         <Route
           path="/edit/:id"
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loading />}>
               <EditSongForm />
             </Suspense>
           }
@@ -53,7 +54,7 @@ const App: React.FC = () => {
         <Route
           path="/newsong"
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loading />}>
               <AddSongForm />
             </Suspense>
           }
@@ -61,7 +62,7 @@ const App: React.FC = () => {
         <Route
           path="/artists"
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loading />}>
               <ArtistsComponentWrapper />
             </Suspense>
           }
@@ -69,7 +70,7 @@ const App: React.FC = () => {
         <Route
           path="/albums"
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loading />}>
               <AlbumsComponentWrapper />
             </Suspense>
           }
@@ -77,7 +78,7 @@ const App: React.FC = () => {
         <Route
           path="/genres"
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loading />}>
               <GenresComponentWrapper />
             </Suspense>
           }
