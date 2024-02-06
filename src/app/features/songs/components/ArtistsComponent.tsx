@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import styled from "styled-components";
 import { selectArtist, selectError, selectLoading } from "../slice/artistSlice";
 import { useAppSelector } from "../../../../store/store";
-import Loading from "./Loading";
+import Loading from "../../../components/Loading";
 import { Artist } from "../../../../types/artist";
 
 const ArtistsComponent: React.FC = () => {

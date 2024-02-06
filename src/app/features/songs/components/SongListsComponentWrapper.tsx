@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from "react";
-import Loading from "./Loading";
+import Loading from "../../../components/Loading";
 import { useAppDispatch } from "../../../../store/store";
 import { fetchSongsStart } from "../slice/songSlice";
 

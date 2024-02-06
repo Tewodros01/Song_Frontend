@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from "react";
 import { useAppDispatch } from "../../../../store/store";
 import { getArtistStart } from "../slice/artistSlice";
-import Loading from "./Loading";
+import Loading from "../../../components/Loading";
 
 const LazyArtistsComponent = React.lazy(() => import("./ArtistsComponent"));
 

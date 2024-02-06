@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { selectAlbum, selectError, selectLoading } from "../slice/albumSlice";
 import { useAppSelector } from "../../../../store/store";
 import { Album } from "../../../../types/album";
-import Loading from "./Loading";
+import Loading from "../../../components/Loading";
 
 const AlbumsComponent = () => {
   const albums = useAppSelector(selectAlbum);

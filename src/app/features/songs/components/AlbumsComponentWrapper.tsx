@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from "react";
 import { useAppDispatch } from "../../../../store/store";
 import { getAlbumStart } from "../slice/albumSlice";
-import Loading from "./Loading";
+import Loading from "../../../components/Loading";
 
 const LazyAlbumsComponent = React.lazy(() => import("./AlbumsComponent"));
 

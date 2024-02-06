@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import styled from "styled-components";
 import { selectError, selectGenres, selectLoading } from "../slice/genresSlice";
 import { useAppSelector } from "../../../../store/store";
-import Loading from "./Loading";
+import Loading from "../../../components/Loading";
 import { Genre } from "../../../../types/genre";
 
 const GenresComponent: React.FC = () => {

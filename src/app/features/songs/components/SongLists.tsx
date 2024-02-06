@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { selectSongs, selectLoading, selectError } from "../slice/songSlice";
 import { useAppSelector } from "../../../../store/store";
-import Loading from "./Loading";
+import Loading from "../../../components/Loading";
 
 const SongList = () => {
   const songs = useAppSelector(selectSongs);

@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "./components/Layout";
 import NotFoundPage from "./components/NotFoundPage";
-import Loading from "./features/songs/components/Loading";
+import Loading from "./components/Loading";
 
 const Home = lazy(() => import("./features/Home/components/Home"));
 const AddSongForm = lazy(

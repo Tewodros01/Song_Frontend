@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from "react";
 import { useAppDispatch } from "../../../../store/store";
 import { getGenresStart } from "../slice/genresSlice";
-import Loading from "./Loading";
+import Loading from "../../../components/Loading";
 
 const LazyGenresComponent = React.lazy(() => import("./GenresComponent"));
 
