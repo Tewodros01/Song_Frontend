@@ -8,8 +8,8 @@ const Layout: React.FC = () => {
   return (
     <section>
       <Navbar />
-      <ToastContainer />
       <Outlet />
+      <ToastContainer position="bottom-right" />
       <Footer />
     </section>
   );
