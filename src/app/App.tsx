@@ -8,6 +8,7 @@ import ArtistsComponentWrapper from "./features/songs/components/ArtistsComponen
 import AlbumsComponentWrapper from "./features/songs/components/AlbumsComponentWrapper";
 import GenresComponentWrapper from "./features/songs/components/GenresComponentWrapper";
 import SongListsComponentWrapper from "./features/songs/components/SongListsComponentWrapper";
+import NotFoundPage from "./components/NotFoundPage";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/artists" element={<ArtistsComponentWrapper />} />
         <Route path="/albums" element={<AlbumsComponentWrapper />} />
         <Route path="/genres" element={<GenresComponentWrapper />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );
