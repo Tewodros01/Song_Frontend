@@ -32,9 +32,8 @@ const AddSongForm: React.FC = () => {
   const onSubmit = async (values: any, { setSubmitting, setErrors }: any) => {
     try {
       dispatch(addSongStart(values));
-      setSubmitting(false);
       navigate("/songs");
-      toast.success("Success! Your new song have been saved");
+      toast.success("Success! Your new song has been saved");
     } catch (error: any) {
       toast.error(`${error.message}`);
       setSubmitting(false);
@@ -56,37 +55,56 @@ const AddSongForm: React.FC = () => {
           validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
-          <Form>
-            <FormGroup>
-              <Label htmlFor="title">Song Title</Label>
-              <Input type="text" id="title" name="title" placeholder="Title" />
-              <ErrorMessageStyled name="title" component="div" />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="artist">Artist</Label>
-              <Input
-                type="text"
-                id="artist"
-                name="artist"
-                placeholder="Artist"
-              />
-              <ErrorMessageStyled name="artist" component="div" />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="album">Album</Label>
-              <Input type="text" id="album" name="album" placeholder="Album" />
-              <ErrorMessageStyled name="album" component="div" />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="genre">Genre</Label>
-              <Input type="text" id="genre" name="genre" placeholder="Genre" />
-              <ErrorMessageStyled name="genre" component="div" />
-            </FormGroup>
-            <ButtonGroup>
-              <BackButton to="/songs">Back</BackButton>
-              <SubmitButton type="submit">Submit</SubmitButton>
-            </ButtonGroup>
-          </Form>
+          {({ isSubmitting }) => (
+            <Form>
+              <FormGroup>
+                <Label htmlFor="title">Song Title</Label>
+                <Input
+                  type="text"
+                  id="title"
+                  name="title"
+                  placeholder="Title"
+                />
+                <ErrorMessageStyled name="title" component="div" />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="artist">Artist</Label>
+                <Input
+                  type="text"
+                  id="artist"
+                  name="artist"
+                  placeholder="Artist"
+                />
+                <ErrorMessageStyled name="artist" component="div" />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="album">Album</Label>
+                <Input
+                  type="text"
+                  id="album"
+                  name="album"
+                  placeholder="Album"
+                />
+                <ErrorMessageStyled name="album" component="div" />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="genre">Genre</Label>
+                <Input
+                  type="text"
+                  id="genre"
+                  name="genre"
+                  placeholder="Genre"
+                />
+                <ErrorMessageStyled name="genre" component="div" />
+              </FormGroup>
+              <ButtonGroup>
+                <BackButton to="/songs">Back</BackButton>
+                <SubmitButton type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Submitting..." : "Submit"}
+                </SubmitButton>
+              </ButtonGroup>
+            </Form>
+          )}
         </Formik>
       </FormContainer>
     </Container>
