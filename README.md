@@ -16,10 +16,10 @@ The Song CRUD App is a web-based application designed to manage a collection of 
 
 ## Technologies Used
 
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+), React.js
+- **Frontend**: Typescript, ReactJS, Redux Toolkit,  Redux - Saga
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
-- **Additional Tools**: Redux (for state management), Axios (for HTTP requests), Bootstrap (for UI styling)
+- **Additional Tools**: Redux (for state management), Axios (for HTTP requests),  Styled system: To style the app
 
 ## Installation
 
@@ -27,35 +27,15 @@ To run the Song CRUD App locally, follow these steps:
 
 1. Clone the repository from GitHub: `git clone https://github.com/your/repository.git`
 
-2. Navigate to the project directory: `cd song-crud-app`
+2. Navigate to the project directory: `cd song_frontend`
 
 3. Install dependencies for both frontend and backend:
     ```
-    cd frontend
-    npm install
-    cd ../backend
-    npm install
+    cd song_frontend
+    yarn install
     ```
 
-4. Set up the MongoDB database:
-    - Ensure MongoDB is installed and running on your system.
-    - Create a new database named `song_crud` and a collection named `songs`.
-
-5. Configure environment variables:
-    - Create a `.env` file in the `backend` directory.
-    - Define the following environment variables:
-        ```
-        PORT=3001
-        MONGODB_URI=mongodb://localhost:27017/song_crud
-        ```
-
-6. Start the backend server:
-    ```
-    cd backend
-    npm start
-    ```
-
-7. Start the frontend development server:
+4. Start the frontend development server:
     ```
     cd frontend
     npm start
@@ -71,7 +51,7 @@ To run the Song CRUD App locally, follow these steps:
 
 3. **Updating a Song**: Click on the "Edit" button next to a song to modify its details.
 
-4. **Deleting a Song**: Click on the "Delete" button next to a song to remove it from the database.
+4. **Deleting a Song**: Click on the "Edit" button next to a song to remove it from the database.
 
 ## Contributions
 
@@ -79,4 +59,3 @@ Contributions to the Song CRUD App are welcome! If you find any bugs, have featu
 
 ## License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
