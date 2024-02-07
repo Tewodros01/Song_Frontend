@@ -1,8 +1,8 @@
-# Song CRUD App
+# Song CRUD App - Frontend
 
 ## Overview
 
-The Song CRUD App is a web-based application designed to manage a collection of songs. It allows users to perform basic CRUD operations: Create, Read, Update, and Delete songs from the database. This application is built using modern web technologies, ensuring scalability, performance, and ease of use.
+The frontend of the Song CRUD App is built using TypeScript and ReactJS library, with Redux Toolkit and Redux-Saga for state management. This part of the application provides a user-friendly interface for managing songs, allowing users to perform CRUD operations easily.
 
 ## Features
 
@@ -16,32 +16,30 @@ The Song CRUD App is a web-based application designed to manage a collection of 
 
 ## Technologies Used
 
-- **Frontend**: Typescript, ReactJS, Redux Toolkit,  Redux - Saga
+- **Frontend**: TypeScript, ReactJS, Redux Toolkit, Redux-Saga, Styled System
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
-- **Additional Tools**: Redux (for state management), Axios (for HTTP requests),  Styled system: To style the app
+- **Additional Tools**: Axios (for HTTP requests)
 
 ## Installation
 
-To run the Song CRUD App locally, follow these steps:
+To run the frontend of the Song CRUD App locally, follow these steps:
 
 1. Clone the repository from GitHub: `git clone https://github.com/your/repository.git`
 
-2. Navigate to the project directory: `cd song_frontend`
+2. Navigate to the frontend directory: `cd song_frontend`
 
-3. Install dependencies for both frontend and backend:
+3. Install dependencies:
     ```
-    cd song_frontend
     yarn install
     ```
 
 4. Start the frontend development server:
     ```
-    cd frontend
     npm start
     ```
 
-8. Access the application in your web browser at `http://localhost:3000`.
+5. Access the application in your web browser at `http://localhost:3000`.
 
 ## Usage
 
@@ -51,11 +49,12 @@ To run the Song CRUD App locally, follow these steps:
 
 3. **Updating a Song**: Click on the "Edit" button next to a song to modify its details.
 
-4. **Deleting a Song**: Click on the "Edit" button next to a song to remove it from the database.
+4. **Deleting a Song**: Click on the "Delete" button next to a song to remove it from the database.
 
 ## Contributions
 
-Contributions to the Song CRUD App are welcome! If you find any bugs, have feature requests, or want to contribute code, please feel free to open an issue or submit a pull request on GitHub.
+Contributions to the frontend of the Song CRUD App are welcome! If you find any bugs, have feature requests, or want to contribute code, please feel free to open an issue or submit a pull request on GitHub.
 
 ## License
 
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
