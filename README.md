@@ -36,7 +36,7 @@ To run the frontend of the Song CRUD App locally, follow these steps:
 
 4. Start the frontend development server:
     ```
-    npm start
+    yarn dev
     ```
 
 5. Access the application in your web browser at `http://localhost:3000`.
