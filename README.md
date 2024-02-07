@@ -25,7 +25,7 @@ The frontend of the Song CRUD App is built using TypeScript and ReactJS library,
 
 To run the frontend of the Song CRUD App locally, follow these steps:
 
-1. Clone the repository from GitHub: `git clone https://github.com/your/repository.git`
+1. Clone the repository from GitHub: `git clone https://github.com/Tewodros01/Song_Frontend.git`
 
 2. Navigate to the frontend directory: `cd song_frontend`
 
