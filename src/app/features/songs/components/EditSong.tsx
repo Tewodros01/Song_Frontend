@@ -11,25 +11,6 @@ import {
 } from "../slice/songSlice";
 import styled from "styled-components";
 
-const validationSchema = Yup.object().shape({
-  title: Yup.string()
-    .required("Title is required")
-    .min(2, "Title must be at least 2 characters")
-    .max(50, "Title must be at most 50 characters"),
-  artist: Yup.string()
-    .required("Artist is required")
-    .min(2, "Artist must be at least 2 characters")
-    .max(50, "Artist must be at most 50 characters"),
-  album: Yup.string()
-    .required("Album is required")
-    .min(2, "Album must be at least 2 characters")
-    .max(50, "Album must be at most 50 characters"),
-  genre: Yup.string()
-    .required("Genre is required")
-    .min(2, "Genre must be at least 2 characters")
-    .max(50, "Genre must be at most 50 characters"),
-});
-
 const EditSongForm: React.FC = () => {
   const { id } = useParams<{ id: any }>();
   const navigate = useNavigate();
@@ -55,7 +36,6 @@ const EditSongForm: React.FC = () => {
 
   const handleDelete = async () => {
     try {
-      if (!id) return;
       dispatch(deleteSongStart(id));
       toast.success("Success: The song has been deleted.");
       navigate("/songs");
@@ -64,57 +44,72 @@ const EditSongForm: React.FC = () => {
     }
   };
 
-  let content;
-  if (!id) {
-    content = <h1>Song Not Found</h1>;
-  } else if (song) {
-    content = (
-      <Formik
-        initialValues={{
-          title: song.title,
-          artist: song.artist,
-          album: song.album,
-          genre: song.genre,
-        }}
-        validationSchema={validationSchema}
-        onSubmit={handleUpdate}
-      >
-        <Form>
-          <FormGroup>
-            <Label htmlFor="title">Song Title</Label>
-            <Input type="text" id="title" name="title" placeholder="Title" />
-            <ErrorMessageStyled name="title" component="div" />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="artist">Artist</Label>
-            <Input type="text" id="artist" name="artist" placeholder="Artist" />
-            <ErrorMessageStyled name="artist" component="div" />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="album">Album</Label>
-            <Input type="text" id="album" name="album" placeholder="Album" />
-            <ErrorMessageStyled name="album" component="div" />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="genre">Genre</Label>
-            <Input type="text" id="genre" name="genre" placeholder="Genre" />
-            <ErrorMessageStyled name="genre" component="div" />
-          </FormGroup>
-          <ButtonGroup>
-            <BackButton to="/songs">Back</BackButton>
-            <SubmitButton type="submit">Update</SubmitButton>
-            <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
-          </ButtonGroup>
-        </Form>
-      </Formik>
-    );
-  }
-
   return (
     <Container>
       <FormContainer>
         <Title>Edit Song</Title>
-        {content}
+        {!id ? (
+          <h1>Song Not Found</h1>
+        ) : song ? (
+          <Formik
+            initialValues={{
+              title: song.title,
+              artist: song.artist,
+              album: song.album,
+              genre: song.genre,
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleUpdate}
+          >
+            <Form>
+              <FormGroup>
+                <Label htmlFor="title">Song Title</Label>
+                <Input
+                  type="text"
+                  id="title"
+                  name="title"
+                  placeholder="Title"
+                />
+                <ErrorMessageStyled name="title" component="div" />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="artist">Artist</Label>
+                <Input
+                  type="text"
+                  id="artist"
+                  name="artist"
+                  placeholder="Artist"
+                />
+                <ErrorMessageStyled name="artist" component="div" />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="album">Album</Label>
+                <Input
+                  type="text"
+                  id="album"
+                  name="album"
+                  placeholder="Album"
+                />
+                <ErrorMessageStyled name="album" component="div" />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="genre">Genre</Label>
+                <Input
+                  type="text"
+                  id="genre"
+                  name="genre"
+                  placeholder="Genre"
+                />
+                <ErrorMessageStyled name="genre" component="div" />
+              </FormGroup>
+              <ButtonGroup>
+                <BackButton to="/songs">Back</BackButton>
+                <SubmitButton type="submit">Update</SubmitButton>
+                <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
+              </ButtonGroup>
+            </Form>
+          </Formik>
+        ) : null}
       </FormContainer>
     </Container>
   );
@@ -218,5 +213,24 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
   margin-top: 1.5rem;
 `;
+
+const validationSchema = Yup.object().shape({
+  title: Yup.string()
+    .required("Title is required")
+    .min(2, "Title must be at least 2 characters")
+    .max(50, "Title must be at most 50 characters"),
+  artist: Yup.string()
+    .required("Artist is required")
+    .min(2, "Artist must be at least 2 characters")
+    .max(50, "Artist must be at most 50 characters"),
+  album: Yup.string()
+    .required("Album is required")
+    .min(2, "Album must be at least 2 characters")
+    .max(50, "Album must be at most 50 characters"),
+  genre: Yup.string()
+    .required("Genre is required")
+    .min(2, "Genre must be at least 2 characters")
+    .max(50, "Genre must be at most 50 characters"),
+});
 
 export default EditSongForm;
