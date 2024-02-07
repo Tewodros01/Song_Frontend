@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
@@ -27,23 +26,18 @@ const validationSchema = Yup.object().shape({
 });
 
 const AddSongForm: React.FC = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const onSubmit = async (values: any, { setErrors }: any) => {
+  const onSubmit = async (values: any, { setSubmitting, setErrors }: any) => {
     try {
-      setIsSubmitting(true);
-
       dispatch(addSongStart(values));
-
       navigate("/songs");
       toast.success("Success! Your new song has been saved");
     } catch (error: any) {
       toast.error(`${error.message}`);
+      setSubmitting(false);
       setErrors(error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -61,7 +55,7 @@ const AddSongForm: React.FC = () => {
           validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
-          {() => (
+          {({ isSubmitting }) => (
             <Form>
               <FormGroup>
                 <Label htmlFor="title">Song Title</Label>
