@@ -55,6 +55,4 @@ To run the frontend of the Song CRUD App locally, follow these steps:
 
 Contributions to the frontend of the Song CRUD App are welcome! If you find any bugs, have feature requests, or want to contribute code, please feel free to open an issue or submit a pull request on GitHub.
 
-## License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
