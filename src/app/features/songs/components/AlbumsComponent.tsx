@@ -21,34 +21,17 @@ const AlbumsComponent = () => {
     setSearchInput(event.target.value);
   };
 
-  let content;
-
   if (isLoading) {
     return <Loading />;
-  } else if (error) {
-    content = (
-      <NoAlbumContainer>
-        <h1>{error}</h1>
-      </NoAlbumContainer>
-    );
-  } else if (filteredAlbums.length === 0) {
-    content = (
-      <NoAlbumContainer>
-        <h1>No Albums Found</h1>
-      </NoAlbumContainer>
-    );
-  } else {
-    content = (
-      <AlbumGrid>
-        {filteredAlbums.map((item, index) => (
-          <AlbumCard key={index}>
-            <Title>{item.album}</Title>
-            <Details>Artist: {item.artist}</Details>
-            <Details>Song: {item.songs}</Details>
-            <Details>Album: {item.album}</Details>
-          </AlbumCard>
-        ))}
-      </AlbumGrid>
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <NoAlbumContainer>
+          <h1>{error}</h1>
+        </NoAlbumContainer>
+      </Container>
     );
   }
 
@@ -64,7 +47,22 @@ const AlbumsComponent = () => {
         onChange={handleSearchInput}
         placeholder="Search Albums..."
       />
-      {content}
+      {filteredAlbums.length === 0 ? (
+        <NoAlbumContainer>
+          <h1>No Albums Found</h1>
+        </NoAlbumContainer>
+      ) : (
+        <AlbumGrid>
+          {filteredAlbums.map((item, index) => (
+            <AlbumCard key={index}>
+              <Title>{item.album}</Title>
+              <Details>Artist: {item.artist}</Details>
+              <Details>Song: {item.songs}</Details>
+              <Details>Album: {item.album}</Details>
+            </AlbumCard>
+          ))}
+        </AlbumGrid>
+      )}
     </Container>
   );
 };

@@ -9,7 +9,9 @@ const Home = lazy(() => import("./features/Home/components/Home"));
 const AddSongForm = lazy(
   () => import("./features/songs/components/AddSongForm")
 );
-const EditSongForm = lazy(() => import("./features/songs/components/EditSong"));
+const EditSongForm = lazy(
+  () => import("./features/songs/components/EditSongForm")
+);
 const ArtistsComponentWrapper = lazy(
   () => import("./features/songs/components/ArtistsComponentWrapper")
 );
