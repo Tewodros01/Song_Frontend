@@ -1,27 +1,35 @@
 import React from "react";
 import styled from "styled-components";
+import { data } from "../../../../types/homeData";
 
-type Data = {
-  label: string;
-  body: string;
+const Features: React.FC = () => {
+  return (
+    <FeatureSection>
+      <section>
+        <Container>
+          <Content>
+            <Title>Music for Every Mood</Title>
+            <Description>
+              Essential Music Collections: A handpicked selection of timeless
+              classics, chart-topping hits, and hidden gems, curated for the
+              ultimate music aficionado's listening pleasure.
+            </Description>
+          </Content>
+        </Container>
+      </section>
+      <section>
+        <DataWrapper>
+          {data.map((icon, index) => (
+            <DataContainer key={index}>
+              <DataTitle>{icon.label}</DataTitle>
+              <DataText>{icon.body}</DataText>
+            </DataContainer>
+          ))}
+        </DataWrapper>
+      </section>
+    </FeatureSection>
+  );
 };
-
-const data: Data[] = [
-  {
-    label: "Top Hits",
-    body: "Discover the latest chart-topping hits and timeless classics. Dive into a world of music where every beat resonates with your soul.",
-  },
-  {
-    label: "Music Genres",
-
-    body: "Explore a diverse range of music genres, from jazz to hip-hop, classical to rock. Find your rhythm and immerse yourself in the melodies of each genre.",
-  },
-  {
-    label: "Music Events",
-
-    body: "Stay updated on upcoming music events and concerts happening near you. Experience the thrill of live performances and connect with fellow music enthusiasts.",
-  },
-];
 
 export const FeatureSection = styled.section`
   padding-top: 20px;
@@ -84,34 +92,5 @@ const DataText = styled.p`
   color: #666;
   margin-top: 0.5rem;
 `;
-
-const Features: React.FC = () => {
-  return (
-    <FeatureSection>
-      <section>
-        <Container>
-          <Content>
-            <Title>Music for Every Mood</Title>
-            <Description>
-              Essential Music Collections: A handpicked selection of timeless
-              classics, chart-topping hits, and hidden gems, curated for the
-              ultimate music aficionado's listening pleasure.
-            </Description>
-          </Content>
-        </Container>
-      </section>
-      <section>
-        <DataWrapper>
-          {data.map((icon, index) => (
-            <DataContainer key={index}>
-              <DataTitle>{icon.label}</DataTitle>
-              <DataText>{icon.body}</DataText>
-            </DataContainer>
-          ))}
-        </DataWrapper>
-      </section>
-    </FeatureSection>
-  );
-};
 
 export default Features;
