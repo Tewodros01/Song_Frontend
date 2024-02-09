@@ -9,7 +9,64 @@ import {
   getStatisticsStart,
 } from "../slice/statisticsSlice";
 
-// Define the animation for the spinner
+const Hero: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const statistics = useAppSelector(selectStatistics);
+  const isLoading = useAppSelector(selectLoadingState);
+  const isError = useAppSelector(selectErrorState);
+
+  useEffect(() => {
+    dispatch(getStatisticsStart());
+  }, [dispatch]);
+
+  let statisticsContent;
+  if (isLoading) {
+    statisticsContent = <Spinner />;
+  } else if (isError) {
+    statisticsContent = <h1>Error occurred. Please try again.</h1>;
+  } else if (statistics != null) {
+    statisticsContent = (
+      <Grid>
+        <Stat>
+          <StatNumber>{statistics.totalArtists}</StatNumber>
+          <StatLabel>Artist</StatLabel>
+        </Stat>
+        <Stat>
+          <StatNumber>{statistics.totalSongs}</StatNumber>
+          <StatLabel>Music</StatLabel>
+        </Stat>
+        <Stat>
+          <StatNumber>{statistics.totalAlbums}</StatNumber>
+          <StatLabel>Albums</StatLabel>
+        </Stat>
+        <Stat>
+          <StatNumber>{statistics.totalGenres}</StatNumber>
+          <StatLabel>Genres</StatLabel>
+        </Stat>
+      </Grid>
+    );
+  }
+  return (
+    <Container>
+      <HeroSection>
+        <Wrapper>
+          <Title>
+            Discover New Music - Exploring <Highlight>Music</Highlight> for
+            Every Mood
+          </Title>
+          <Paragraph>
+            Dive into a world of endless melodies as we bring you the latest
+            hits and timeless classics. Our curated playlists, meticulously
+            crafted by music enthusiasts, promise to take your auditory
+            experience to new heights.
+          </Paragraph>
+          {statisticsContent}
+        </Wrapper>
+      </HeroSection>
+    </Container>
+  );
+};
+
 const spinAnimation = keyframes`
   0% {
     transform: rotate(0deg);
@@ -19,7 +76,6 @@ const spinAnimation = keyframes`
   }
 `;
 
-// Styled component for the spinner
 const Spinner = styled.div`
   border: 4px solid rgba(255, 255, 255, 0.3);
   border-top: 4px solid #fff;
@@ -93,64 +149,5 @@ const StatLabel = styled.p`
   font-weight: 600;
   font-size: 1rem;
 `;
-
-const Hero: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const statistics = useAppSelector(selectStatistics);
-  const isLoading = useAppSelector(selectLoadingState);
-  const isError = useAppSelector(selectErrorState);
-
-  useEffect(() => {
-    dispatch(getStatisticsStart());
-  }, [dispatch]);
-
-  let statisticsContent;
-  if (isLoading) {
-    // Render spinner while loading
-    statisticsContent = <Spinner />;
-  } else if (isError) {
-    statisticsContent = <h1>Error occurred. Please try again.</h1>;
-  } else if (statistics != null) {
-    statisticsContent = (
-      <Grid>
-        <Stat>
-          <StatNumber>{statistics.totalArtists}</StatNumber>
-          <StatLabel>Artist</StatLabel>
-        </Stat>
-        <Stat>
-          <StatNumber>{statistics.totalSongs}</StatNumber>
-          <StatLabel>Music</StatLabel>
-        </Stat>
-        <Stat>
-          <StatNumber>{statistics.totalAlbums}</StatNumber>
-          <StatLabel>Albums</StatLabel>
-        </Stat>
-        <Stat>
-          <StatNumber>{statistics.totalGenres}</StatNumber>
-          <StatLabel>Genres</StatLabel>
-        </Stat>
-      </Grid>
-    );
-  }
-  return (
-    <Container>
-      <HeroSection>
-        <Wrapper>
-          <Title>
-            Discover New Music - Exploring <Highlight>Music</Highlight> for
-            Every Mood
-          </Title>
-          <Paragraph>
-            Dive into a world of endless melodies as we bring you the latest
-            hits and timeless classics. Our curated playlists, meticulously
-            crafted by music enthusiasts, promise to take your auditory
-            experience to new heights.
-          </Paragraph>
-          {statisticsContent}
-        </Wrapper>
-      </HeroSection>
-    </Container>
-  );
-};
 
 export default Hero;
