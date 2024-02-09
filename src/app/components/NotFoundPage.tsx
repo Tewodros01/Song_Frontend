@@ -1,6 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 
+const NotFoundPage: React.FC = () => {
+  return (
+    <Container>
+      <Content>
+        <Title>404 - Page Not Found</Title>
+        <Description>
+          Sorry, the page you are looking for does not exist.
+        </Description>
+      </Content>
+    </Container>
+  );
+};
+
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -20,18 +33,5 @@ const Title = styled.h1`
 const Description = styled.p`
   font-size: 1.2rem;
 `;
-
-const NotFoundPage: React.FC = () => {
-  return (
-    <Container>
-      <Content>
-        <Title>404 - Page Not Found</Title>
-        <Description>
-          Sorry, the page you are looking for does not exist.
-        </Description>
-      </Content>
-    </Container>
-  );
-};
 
 export default NotFoundPage;
