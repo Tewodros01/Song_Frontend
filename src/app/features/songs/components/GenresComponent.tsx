@@ -4,20 +4,20 @@ import { selectError, selectGenres, selectLoading } from "../slice/genresSlice";
 import { useAppSelector } from "../../../../store/store";
 import Loading from "../../../components/Loading";
 import { Genre } from "../../../../types/genre";
-import { SortByGenres } from "../../../../types/sortby";
+import { GenresSort } from "../../../../types/sortby";
 
 const GenresComponent: React.FC = () => {
   const genres = useAppSelector(selectGenres);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
   const [searchInput, setSearchInput] = useState<string>("");
-  const [sortBy, setSortBy] = useState<SortByGenres>("genre"); // Initial sort by genre
+  const [sortBy, setSortBy] = useState<GenresSort>("genre"); // Initial sort by genre
   const [currentPage, setCurrentPage] = useState<number>(1);
   const genresPerPage = 10;
 
   const filteredGenres = useMemo(() => {
     const filtered = genres.filter((genre: Genre) =>
-      genre.genre.toLowerCase().includes(searchInput.toLowerCase())
+      genre.genre.toUpperCase().includes(searchInput.toUpperCase())
     );
 
     // Sorting
@@ -34,7 +34,7 @@ const GenresComponent: React.FC = () => {
   };
 
   const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(event.target.value as SortByGenres);
+    setSortBy(event.target.value as GenresSort);
   };
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
@@ -76,7 +76,9 @@ const GenresComponent: React.FC = () => {
           onChange={handleSortByChange}
         >
           <option value="genre">Genre</option>
-          {/* Add more sorting options as needed */}
+          <option value="songs">Songs</option>
+          <option value="numberOfAlbums">Number Of Albums</option>
+          <option value="numberOfArtists">Number Of Artists</option>
         </SortSelect>
       </SortSelectContainer>
       {filteredGenres.length === 0 ? (

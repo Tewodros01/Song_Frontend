@@ -1,135 +1,142 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { selectSongs, selectLoading, selectError } from "../slice/songSlice"; // Assuming you have a type named Song
-import { useAppSelector } from "../../../../store/store";
+import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import Loading from "../../../components/Loading";
-import { SortBy } from "../../../../types/sortby";
+import {
+  selectSortedSongs,
+  selectLoading,
+  selectError,
+  selectSongsSort,
+  setSongsSort,
+} from "../slice/songSlice";
+import { SongsSort } from "../../../../types/sortby";
 
-const SongList = () => {
-  const songs = useAppSelector(selectSongs);
+const SongList: React.FC = () => {
+  const dispatch = useAppDispatch();
+
+  // Redux state selectors
+  const songs = useAppSelector(selectSortedSongs);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
+  const currentSongsSort = useAppSelector(selectSongsSort);
 
+  // Component state
   const [searchInput, setSearchInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState<SortBy>("title"); // Initial sort by title
-  const songsPerPage = 10; // Number of songs per page
+  const songsPerPage = 10;
 
-  // Filtered and paginated songs
-  const filteredSongs = songs.filter((song) =>
-    song.title?.toUpperCase().includes(searchInput.toUpperCase())
-  );
+  // Event handlers
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatch(setSongsSort(event.target.value as SongsSort));
+    setCurrentPage(1); // Reset page number when sorting changes
+  };
+
+  // Paginate the sorted songs
   const indexOfLastSong = currentPage * songsPerPage;
   const indexOfFirstSong = indexOfLastSong - songsPerPage;
-  const currentSongs = filteredSongs.slice(indexOfFirstSong, indexOfLastSong);
+  const currentSongs = songs.slice(indexOfFirstSong, indexOfLastSong);
 
+  //filter songs with search input
+  const filteredSongs = currentSongs.filter((song) =>
+    song.title?.toUpperCase().includes(searchInput.toUpperCase())
+  );
   // Pagination controls
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  // Handle search input change
-  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(event.target.value);
-    setCurrentPage(1); // Reset pagination when search changes
-  };
-
-  // Handle sort by change
-  const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(event.target.value as SortBy);
-  };
-
-  // Sort the songs based on the selected sorting option
-  const sortedSongs = currentSongs.slice().sort((a, b) => {
-    return a[sortBy]!.localeCompare(b[sortBy]!); // Ensure non-null assertion
-  });
-
-  // Content rendering
-  let content;
   if (isLoading) {
     return <Loading />;
-  } else if (error) {
-    content = (
-      <NoSongContainer>
-        <h1>{error}</h1>
-      </NoSongContainer>
-    );
-  } else if (filteredSongs.length === 0) {
-    content = (
-      <NoSongContainer>
-        <h1>No Songs Found</h1>
-      </NoSongContainer>
-    );
-  } else {
-    content = (
-      <>
-        <SortSelectContainer>
-          <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
-          <SortSelect
-            id="sort-select"
-            value={sortBy}
-            onChange={handleSortByChange}
-          >
-            <option value="title">Title</option>
-            <option value="artist">Artist</option>
-            <option value="album">Album</option>
-            <option value="genre">Genre</option>
-            <option value="createdAt">CreatedAt</option>
-          </SortSelect>
-        </SortSelectContainer>
-        <SongGrid>
-          {sortedSongs.map((song, index) => (
-            <SongCard key={index}>
-              <Title>{song.title}</Title>
-              <Details>Artist: {song.artist}</Details>
-              <Details>Album: {song.album}</Details>
-              <Details>Genre: {song.genre}</Details>
-              <EditButton to={`/edit/${song.id}`}>Edit Song</EditButton>
-            </SongCard>
-          ))}
-        </SongGrid>
-        <Pagination>
-          {Array.from(
-            { length: Math.ceil(filteredSongs.length / songsPerPage) },
-            (_, i) => (
-              <PaginationItem
-                key={i}
-                onClick={() => paginate(i + 1)}
-                active={i + 1 === currentPage}
-              >
-                {i + 1}
-              </PaginationItem>
-            )
-          )}
-        </Pagination>
-      </>
-    );
   }
+  // Render content based on state
+  const renderContent = () => {
+    if (error) {
+      return (
+        <NoSongContainer>
+          <h1>{error}</h1>
+        </NoSongContainer>
+      );
+    } else if (songs.length === 0) {
+      return (
+        <NoSongContainer>
+          <h1>No Songs Found</h1>
+        </NoSongContainer>
+      );
+    } else {
+      return (
+        <>
+          <SortSelectContainer>
+            <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
+            <SortSelect
+              id="sort-select"
+              value={currentSongsSort}
+              onChange={handleSortByChange}
+            >
+              <option value="title">Title</option>
+              <option value="artist">Artist</option>
+              <option value="album">Album</option>
+              <option value="genre">Genre</option>
+              <option value="createdAt">CreatedAt</option>
+            </SortSelect>
+          </SortSelectContainer>
+          <SongGrid>
+            {filteredSongs.map((song, index) => (
+              <SongCard key={index}>
+                <Title>{song.title}</Title>
+                <Details>Artist: {song.artist}</Details>
+                <Details>Album: {song.album}</Details>
+                <Details>Genre: {song.genre}</Details>
+                <EditButton to={`/edit/${song.id}`}>Edit Song</EditButton>
+              </SongCard>
+            ))}
+          </SongGrid>
+          <Pagination>
+            {Array.from(
+              { length: Math.ceil(songs.length / songsPerPage) },
+              (_, i) => (
+                <PaginationItem
+                  key={i}
+                  onClick={() => paginate(i + 1)}
+                  active={i + 1 === currentPage}
+                >
+                  {i + 1}
+                </PaginationItem>
+              )
+            )}
+          </Pagination>
+        </>
+      );
+    }
+  };
 
   return (
-    <>
-      <Container>
-        <TopBar>
-          <AddNewSong to="/newsong">Add new Song</AddNewSong>
-        </TopBar>
-        <SearchContainer>
-          <Description>
-            Explore and search through the collection of Songs
-          </Description>
-          <SearchInput
-            type="text"
-            id="topbar-search"
-            value={searchInput}
-            onChange={handleSearchInput}
-            placeholder="Search Songs..."
-          />
-        </SearchContainer>
+    <Container>
+      <TopBar>
+        <AddNewSong to="/newsong">Add New Song</AddNewSong>
+      </TopBar>
+      <SearchContainer>
+        <Description>
+          Explore and search through the collection of Songs
+        </Description>
+        <SearchInput
+          type="text"
+          id="topbar-search"
+          value={searchInput}
+          onChange={handleSearchInput}
+          placeholder="Search Songs..."
+        />
+      </SearchContainer>
 
-        {content}
-      </Container>
-    </>
+      {renderContent()}
+    </Container>
   );
 };
 
+// Styled components
 const Container = styled.div`
   width: 100%;
   padding: 1rem 8rem 8rem;

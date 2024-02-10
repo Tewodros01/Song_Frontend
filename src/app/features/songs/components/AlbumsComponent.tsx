@@ -4,20 +4,20 @@ import { selectAlbum, selectError, selectLoading } from "../slice/albumSlice";
 import { useAppSelector } from "../../../../store/store";
 import { Album } from "../../../../types/album";
 import Loading from "../../../components/Loading";
-import { SortByAlbum } from "../../../../types/sortby";
+import { AlbumsSort } from "../../../../types/sortby";
 
 const AlbumsComponent = () => {
   const albums = useAppSelector(selectAlbum);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
   const [searchInput, setSearchInput] = useState("");
-  const [sortBy, setSortBy] = useState<SortByAlbum>("album"); // Initial sort by album
+  const [sortBy, setSortBy] = useState<AlbumsSort>("album"); // Initial sort by album
   const [currentPage, setCurrentPage] = useState<number>(1);
   const albumsPerPage = 10;
 
   const filteredAlbums = useMemo(() => {
     const filtered = albums.filter((album: Album) =>
-      album.album.toLowerCase().includes(searchInput.toLowerCase())
+      album.album.toUpperCase().includes(searchInput.toUpperCase())
     );
 
     // Sorting
@@ -34,7 +34,7 @@ const AlbumsComponent = () => {
   };
 
   const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(event.target.value as SortByAlbum);
+    setSortBy(event.target.value as AlbumsSort);
   };
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
@@ -75,11 +75,11 @@ const AlbumsComponent = () => {
           value={sortBy}
           onChange={handleSortByChange}
         >
+          <option value="artist">Artist</option>
+          <option value="songs">Songs</option>
           <option value="album">Album</option>
-          {/* Add more sorting options as needed */}
         </SortSelect>
       </SortSelectContainer>
-
       {filteredAlbums.length === 0 ? (
         <NoAlbumContainer>
           <h1>No Albums Found</h1>

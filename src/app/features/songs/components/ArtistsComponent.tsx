@@ -4,20 +4,20 @@ import { selectArtist, selectError, selectLoading } from "../slice/artistSlice";
 import { useAppSelector } from "../../../../store/store";
 import Loading from "../../../components/Loading";
 import { Artist } from "../../../../types/artist";
-import { SortByArtist } from "../../../../types/sortby";
+import { ArtistsSort } from "../../../../types/sortby";
 
 const ArtistsComponent: React.FC = () => {
   const artists = useAppSelector(selectArtist);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
   const [searchInput, setSearchInput] = useState<string>("");
-  const [sortBy, setSortBy] = useState<SortByArtist>("artist"); // Initial sort by artist
+  const [sortBy, setSortBy] = useState<ArtistsSort>("artist"); // Initial sort by artist
   const [currentPage, setCurrentPage] = useState<number>(1);
   const artistsPerPage = 10;
 
   const filteredArtists = useMemo(() => {
     const filtered = artists.filter((artist: Artist) =>
-      artist.artist.toLowerCase().includes(searchInput.toLowerCase())
+      artist.artist.toUpperCase().includes(searchInput.toUpperCase())
     );
 
     // Sorting
@@ -34,7 +34,7 @@ const ArtistsComponent: React.FC = () => {
   };
 
   const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(event.target.value as SortByArtist);
+    setSortBy(event.target.value as ArtistsSort);
   };
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
