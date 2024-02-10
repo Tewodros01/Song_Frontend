@@ -4,4 +4,5 @@ export type Song = {
   artist: string;
   album: string;
   genre: string;
+  createdAt?: string;
 };

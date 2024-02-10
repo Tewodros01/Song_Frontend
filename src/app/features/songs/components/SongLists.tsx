@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { selectSongs, selectLoading, selectError } from "../slice/songSlice";
+import { selectSongs, selectLoading, selectError } from "../slice/songSlice"; // Assuming you have a type named Song
 import { useAppSelector } from "../../../../store/store";
 import Loading from "../../../components/Loading";
+import { SortBy } from "../../../../types/sortby";
 
 const SongList = () => {
   const songs = useAppSelector(selectSongs);
@@ -11,23 +12,42 @@ const SongList = () => {
   const error = useAppSelector(selectError);
 
   const [searchInput, setSearchInput] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<SortBy>("title"); // Initial sort by title
+  const songsPerPage = 10; // Number of songs per page
 
-  const filteredSongs = useMemo(() => {
-    return songs.filter((song) =>
-      song.title?.toUpperCase().includes(searchInput.toUpperCase())
-    );
-  }, [songs, searchInput]);
+  // Filtered and paginated songs
+  const filteredSongs = songs.filter((song) =>
+    song.title?.toUpperCase().includes(searchInput.toUpperCase())
+  );
+  const indexOfLastSong = currentPage * songsPerPage;
+  const indexOfFirstSong = indexOfLastSong - songsPerPage;
+  const currentSongs = filteredSongs.slice(indexOfFirstSong, indexOfLastSong);
 
+  // Pagination controls
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  // Handle search input change
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
+    setCurrentPage(1); // Reset pagination when search changes
   };
 
-  let content;
+  // Handle sort by change
+  const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(event.target.value as SortBy);
+  };
 
+  // Sort the songs based on the selected sorting option
+  const sortedSongs = currentSongs.slice().sort((a, b) => {
+    return a[sortBy]!.localeCompare(b[sortBy]!); // Ensure non-null assertion
+  });
+
+  // Content rendering
+  let content;
   if (isLoading) {
     return <Loading />;
-  }
-  if (error) {
+  } else if (error) {
     content = (
       <NoSongContainer>
         <h1>{error}</h1>
@@ -41,74 +61,132 @@ const SongList = () => {
     );
   } else {
     content = (
-      <SongGrid>
-        {filteredSongs.map((song, index) => (
-          <SongCard key={index}>
-            <Title>{song.title}</Title>
-            <Details>Artist: {song.artist}</Details>
-            <Details>Album: {song.album}</Details>
-            <Details>Genre: {song.genre}</Details>
-            <EditButton to={`/edit/${song.id}`}>Edit Song</EditButton>
-          </SongCard>
-        ))}
-      </SongGrid>
+      <>
+        <SortSelectContainer>
+          <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
+          <SortSelect
+            id="sort-select"
+            value={sortBy}
+            onChange={handleSortByChange}
+          >
+            <option value="title">Title</option>
+            <option value="artist">Artist</option>
+            <option value="album">Album</option>
+            <option value="genre">Genre</option>
+            <option value="createdAt">CreatedAt</option>
+          </SortSelect>
+        </SortSelectContainer>
+        <SongGrid>
+          {sortedSongs.map((song, index) => (
+            <SongCard key={index}>
+              <Title>{song.title}</Title>
+              <Details>Artist: {song.artist}</Details>
+              <Details>Album: {song.album}</Details>
+              <Details>Genre: {song.genre}</Details>
+              <EditButton to={`/edit/${song.id}`}>Edit Song</EditButton>
+            </SongCard>
+          ))}
+        </SongGrid>
+        <Pagination>
+          {Array.from(
+            { length: Math.ceil(filteredSongs.length / songsPerPage) },
+            (_, i) => (
+              <PaginationItem
+                key={i}
+                onClick={() => paginate(i + 1)}
+                active={i + 1 === currentPage}
+              >
+                {i + 1}
+              </PaginationItem>
+            )
+          )}
+        </Pagination>
+      </>
     );
   }
 
   return (
-    <Container>
-      <AddNewSong to="/newsong">Add new Song</AddNewSong>
-      <Description>
-        Explore and search through the collection of Songs
-      </Description>
-      <SearchInput
-        type="text"
-        id="topbar-search"
-        value={searchInput}
-        onChange={handleSearchInput}
-        placeholder="Search Songs..."
-      />
-      {content}
-    </Container>
+    <>
+      <Container>
+        <TopBar>
+          <AddNewSong to="/newsong">Add new Song</AddNewSong>
+        </TopBar>
+        <SearchContainer>
+          <Description>
+            Explore and search through the collection of Songs
+          </Description>
+          <SearchInput
+            type="text"
+            id="topbar-search"
+            value={searchInput}
+            onChange={handleSearchInput}
+            placeholder="Search Songs..."
+          />
+        </SearchContainer>
+
+        {content}
+      </Container>
+    </>
   );
 };
 
 const Container = styled.div`
   width: 100%;
+  padding: 1rem 8rem 8rem;
+
+  @media (min-width: 768px) {
+    padding: 1rem 2rem 2rem;
+  }
+`;
+
+const TopBar = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 2rem;
+`;
+
+const SearchContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4rem 0;
+  justify-content: center;
+`;
+
+const SortSelectContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const SortLabel = styled.label`
+  margin-right: 0.5rem;
+  margin-bottom: 1rem;
+`;
+
+const SortSelect = styled.select`
+  height: 2.5rem;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
 `;
 
 const SongGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 2rem;
-  width: 80%;
-  max-width: 1200px;
-  margin-bottom: 2rem;
 `;
 
 const SongCard = styled.div`
   padding: 1.5rem;
-  background-color: white;
+  background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #1e40af;
   border-radius: 0.5rem;
   transition: all 0.3s ease;
-  text-decoration: none;
-  color: #000;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    background-color: #f0f0f0; /* Lighter color on hover */
-    color: #000; /* Text color on hover */
+    background-color: #f0f0f0;
   }
 `;
 
@@ -124,79 +202,80 @@ const Details = styled.p`
 `;
 
 const EditButton = styled(Link)`
+  display: block;
   margin-top: 1rem;
   height: 2rem;
   width: 7rem;
   border-radius: 0.5rem;
-  border: 1px solid #ccc;
+  border: none;
   font-size: 0.87rem;
-  outline: none;
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
+  line-height: 2rem;
   background: #4b0082;
   color: #fff;
 `;
 
 const AddNewSong = styled(Link)`
-  position: absolute;
-  top: 6rem;
-  right: 1rem;
   height: 3.5rem;
   width: 15rem;
   border-radius: 1rem;
-  border: 1px solid #ccc;
+  border: none;
   font-size: 1rem;
-  outline: none;
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
+  line-height: 3.5rem;
   background: #4b0082;
   color: #fff;
 `;
 
 const Description = styled.p`
   font-size: 1.2rem;
-  margin-top: 2rem;
+  margin-bottom: 1rem;
   color: #555;
   text-align: center;
-
-  @media screen and (max-width: 768px) {
-    font-size: 1rem;
-    margin-top: 1rem;
-  }
 `;
 
 const SearchInput = styled.input`
-  margin-top: 1rem;
-  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 500px;
   height: 2.5rem;
-  width: 30rem;
-  padding-left: 2.5rem;
-  border-radius: 1.25rem;
+  padding: 0.5rem;
+  border-radius: 1rem;
   border: 1px solid #ccc;
   font-size: 1rem;
+  margin-bottom: 1rem;
   outline: none;
-
-  @media screen and (max-width: 768px) {
-    width: 80%;
-  }
 `;
 
 const NoSongContainer = styled.div`
   display: flex;
+  width: 30rem;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  align-items: center;
   gap: 1rem;
   font-size: 0.5rem;
   color: #555;
   padding: 1rem;
   border: 2px dashed #ccc;
   border-radius: 0.5rem;
+`;
+
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+`;
+
+const PaginationItem = styled.div<{ active: boolean }>`
+  cursor: pointer;
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: ${(props) => (props.active ? "#1e40af" : "#ccc")};
+  color: ${(props) => (props.active ? "#fff" : "#000")};
 `;
 
 export default SongList;
