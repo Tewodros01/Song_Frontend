@@ -8,6 +8,7 @@ interface SongState {
   loading: boolean;
   error: string | null;
   songsSort: SongsSort;
+  searchInput: string;
 }
 
 const initialState: SongState = {
@@ -15,6 +16,7 @@ const initialState: SongState = {
   loading: false,
   error: null,
   songsSort: "createdAt",
+  searchInput: "",
 };
 
 const songSlice = createSlice({
@@ -78,6 +80,9 @@ const songSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    setSearchInput(state, action: PayloadAction<string>) {
+      state.searchInput = action.payload;
+    },
     setSongsSort(state, action: PayloadAction<SongsSort>) {
       state.songsSort = action.payload;
     },
@@ -98,18 +103,26 @@ export const {
   deleteSongSuccess,
   deleteSongFailure,
   setSongsSort,
+  setSearchInput,
 } = songSlice.actions;
 
 export const selectSongById = (songId: string) => (state: RootState) =>
   state.songs.songs.find((song) => song.id === songId);
 export const selectSongs = (state: RootState) => state.songs.songs;
 export const selectSongsSort = (state: RootState) => state.songs.songsSort;
+export const selectSearchInput = (state: RootState) => state.songs.searchInput;
 export const selectLoading = (state: RootState) => state.songs.loading;
 export const selectError = (state: RootState) => state.songs.error;
 
-export const selectSortedSongs = (state: RootState) => {
-  const { songs, songsSort } = state.songs;
-  return songs.slice().sort((a, b) => {
+export const selectFilteredSongs = (state: RootState) => {
+  const { songs, songsSort, searchInput } = state.songs;
+  // Filter songs based on search input
+  const filteredSongs = songs.filter((song) =>
+    song.title?.toUpperCase().includes(searchInput.toUpperCase())
+  );
+
+  // Sort the filtered songs based on the selected sorting option
+  return filteredSongs.sort((a, b) => {
     if (songsSort === "createdAt") {
       // Sort by createdAt
       return (

@@ -4,11 +4,12 @@ import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import Loading from "../../../components/Loading";
 import {
-  selectSortedSongs,
+  selectFilteredSongs,
   selectLoading,
   selectError,
   selectSongsSort,
   setSongsSort,
+  setSearchInput,
 } from "../slice/songSlice";
 import { SongsSort } from "../../../../types/sortby";
 
@@ -16,19 +17,18 @@ const SongList: React.FC = () => {
   const dispatch = useAppDispatch();
 
   // Redux state selectors
-  const songs = useAppSelector(selectSortedSongs);
+  const songs = useAppSelector(selectFilteredSongs);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
   const currentSongsSort = useAppSelector(selectSongsSort);
 
   // Component state
-  const [searchInput, setSearchInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const songsPerPage = 10;
 
   // Event handlers
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(event.target.value);
+    dispatch(setSearchInput(event.target.value));
     setCurrentPage(1);
   };
 
@@ -42,10 +42,6 @@ const SongList: React.FC = () => {
   const indexOfFirstSong = indexOfLastSong - songsPerPage;
   const currentSongs = songs.slice(indexOfFirstSong, indexOfLastSong);
 
-  //filter songs with search input
-  const filteredSongs = currentSongs.filter((song) =>
-    song.title?.toUpperCase().includes(searchInput.toUpperCase())
-  );
   // Pagination controls
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -84,7 +80,7 @@ const SongList: React.FC = () => {
             </SortSelect>
           </SortSelectContainer>
           <SongGrid>
-            {filteredSongs.map((song, index) => (
+            {currentSongs.map((song, index) => (
               <SongCard key={index}>
                 <Title>{song.title}</Title>
                 <Details>Artist: {song.artist}</Details>
@@ -125,7 +121,6 @@ const SongList: React.FC = () => {
         <SearchInput
           type="text"
           id="topbar-search"
-          value={searchInput}
           onChange={handleSearchInput}
           placeholder="Search Songs..."
         />
