@@ -4,22 +4,40 @@ import { selectAlbum, selectError, selectLoading } from "../slice/albumSlice";
 import { useAppSelector } from "../../../../store/store";
 import { Album } from "../../../../types/album";
 import Loading from "../../../components/Loading";
+import { SortByAlbum } from "../../../../types/sortby";
 
 const AlbumsComponent = () => {
   const albums = useAppSelector(selectAlbum);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
   const [searchInput, setSearchInput] = useState("");
+  const [sortBy, setSortBy] = useState<SortByAlbum>("album"); // Initial sort by album
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const albumsPerPage = 10;
 
   const filteredAlbums = useMemo(() => {
-    return albums.filter((album: Album) =>
+    const filtered = albums.filter((album: Album) =>
       album.album.toLowerCase().includes(searchInput.toLowerCase())
     );
-  }, [albums, searchInput]);
+
+    // Sorting
+    filtered.sort((a, b) => (a[sortBy] > b[sortBy] ? 1 : -1));
+
+    // Pagination
+    const indexOfLastAlbum = currentPage * albumsPerPage;
+    const indexOfFirstAlbum = indexOfLastAlbum - albumsPerPage;
+    return filtered.slice(indexOfFirstAlbum, indexOfLastAlbum);
+  }, [albums, searchInput, sortBy, currentPage]);
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
   };
+
+  const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(event.target.value as SortByAlbum);
+  };
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   if (isLoading) {
     return <Loading />;
@@ -37,72 +55,116 @@ const AlbumsComponent = () => {
 
   return (
     <Container>
-      <Description>
-        Explore and search through the collection of albums.
-      </Description>
-      <SearchInput
-        type="text"
-        id="topbar-search"
-        value={searchInput}
-        onChange={handleSearchInput}
-        placeholder="Search Albums..."
-      />
+      <SearchContainer>
+        <Description>
+          Explore and search through the collection of albums.
+        </Description>
+        <SearchInput
+          type="text"
+          id="topbar-search"
+          value={searchInput}
+          onChange={handleSearchInput}
+          placeholder="Search Albums..."
+        />
+      </SearchContainer>
+
+      <SortSelectContainer>
+        <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
+        <SortSelect
+          id="sort-select"
+          value={sortBy}
+          onChange={handleSortByChange}
+        >
+          <option value="album">Album</option>
+          {/* Add more sorting options as needed */}
+        </SortSelect>
+      </SortSelectContainer>
+
       {filteredAlbums.length === 0 ? (
         <NoAlbumContainer>
           <h1>No Albums Found</h1>
         </NoAlbumContainer>
       ) : (
         <AlbumGrid>
-          {filteredAlbums.map((item, index) => (
+          {filteredAlbums.map((item: Album, index: number) => (
             <AlbumCard key={index}>
               <Title>{item.album}</Title>
               <Details>Artist: {item.artist}</Details>
-              <Details>Song: {item.songs}</Details>
+              <Details>Songs: {item.songs}</Details>
               <Details>Album: {item.album}</Details>
             </AlbumCard>
           ))}
         </AlbumGrid>
       )}
+
+      <Pagination>
+        {Array.from(
+          { length: Math.ceil(albums.length / albumsPerPage) },
+          (_, i) => (
+            <PaginationItem
+              key={i}
+              onClick={() => paginate(i + 1)}
+              active={i + 1 === currentPage}
+            >
+              {i + 1}
+            </PaginationItem>
+          )
+        )}
+      </Pagination>
     </Container>
   );
 };
 
 const Container = styled.div`
   width: 100%;
+  padding: 1rem 8rem 8rem;
+
+  @media (min-width: 768px) {
+    padding: 1rem 2rem 2rem;
+  }
+`;
+
+const SearchContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem 4rem 4rem;
+  justify-content: center;
+`;
+
+const SortSelectContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const SortLabel = styled.label`
+  margin-right: 0.5rem;
+  margin-bottom: 1rem;
+`;
+
+const SortSelect = styled.select`
+  height: 2.5rem;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
 `;
 
 const AlbumGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 2rem;
-  width: 80%;
-  max-width: 1200px;
-  margin-bottom: 2rem;
 `;
 
 const AlbumCard = styled.div`
   padding: 1.5rem;
-  background-color: white;
+  background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #1e40af;
   border-radius: 0.5rem;
   transition: all 0.3s ease;
-  text-decoration: none;
-  color: #000;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    background-color: #f0f0f0; /* Lighter color on hover */
-    color: #000; /* Text color on hover */
+    background-color: #f0f0f0;
   }
 `;
 
@@ -119,34 +181,26 @@ const Details = styled.p`
 
 const Description = styled.p`
   font-size: 1.2rem;
-  margin-top: 2rem;
+  margin-bottom: 1rem;
   color: #555;
   text-align: center;
-
-  @media screen and (max-width: 768px) {
-    font-size: 1rem;
-    margin-top: 1rem;
-  }
 `;
 
 const SearchInput = styled.input`
-  margin-top: 1rem;
-  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 500px;
   height: 2.5rem;
-  width: 30rem;
-  padding-left: 2.5rem;
-  border-radius: 1.25rem;
+  padding: 0.5rem;
+  border-radius: 1rem;
   border: 1px solid #ccc;
   font-size: 1rem;
+  margin-bottom: 1rem;
   outline: none;
-
-  @media screen and (max-width: 768px) {
-    width: 80%;
-  }
 `;
 
 const NoAlbumContainer = styled.div`
   display: flex;
+  width: 30rem;
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -156,6 +210,22 @@ const NoAlbumContainer = styled.div`
   padding: 1rem;
   border: 2px dashed #ccc;
   border-radius: 0.5rem;
+`;
+
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+`;
+
+const PaginationItem = styled.div<{ active: boolean }>`
+  cursor: pointer;
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: ${(props) => (props.active ? "#1e40af" : "#ccc")};
+  color: ${(props) => (props.active ? "#fff" : "#000")};
 `;
 
 export default AlbumsComponent;
