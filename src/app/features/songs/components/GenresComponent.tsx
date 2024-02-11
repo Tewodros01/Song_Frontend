@@ -44,15 +44,63 @@ const GenresComponent: React.FC = () => {
     return <Loading />;
   }
 
-  if (error) {
-    return (
-      <Container>
-        <NoGenresContainer>
-          <h1>{error}</h1>
-        </NoGenresContainer>
-      </Container>
-    );
-  }
+  const renderContent = () => {
+    if (error) {
+      return (
+        <Container>
+          <NoGenresContainer>
+            <h1>{error}</h1>
+          </NoGenresContainer>
+        </Container>
+      );
+    } else if (currentGenres.length === 0) {
+      return <NoGenresContainer>No Genres Found</NoGenresContainer>;
+    } else {
+      return (
+        <>
+          <SortSelectContainer>
+            <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
+            <SortSelect
+              id="sort-select"
+              value={currentGenresSort}
+              onChange={handleSortByChange}
+            >
+              <option value="genre">Genre</option>
+              <option value="songs">Songs</option>
+              <option value="numberOfAlbums">Number Of Albums</option>
+              <option value="numberOfArtists">Number Of Artists</option>
+            </SortSelect>
+          </SortSelectContainer>
+
+          <GenresGrid>
+            {currentGenres.map((item: Genre, index: number) => (
+              <GenresCard key={index}>
+                <Title>{item.genre}</Title>
+                <Details>Songs: {item.songs}</Details>
+                <Details>Artists: {item.numberOfArtists}</Details>
+                <Details>Albums: {item.numberOfAlbums}</Details>
+              </GenresCard>
+            ))}
+          </GenresGrid>
+
+          <Pagination>
+            {Array.from(
+              { length: Math.ceil(genres.length / genresPerPage) },
+              (_, i) => (
+                <PaginationItem
+                  key={i}
+                  onClick={() => paginate(i + 1)}
+                  active={i + 1 === currentPage}
+                >
+                  {i + 1}
+                </PaginationItem>
+              )
+            )}
+          </Pagination>
+        </>
+      );
+    }
+  };
 
   return (
     <Container>
@@ -67,56 +115,16 @@ const GenresComponent: React.FC = () => {
           placeholder="Search genres..."
         />
       </SearchContainer>
-
-      <SortSelectContainer>
-        <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
-        <SortSelect
-          id="sort-select"
-          value={currentGenresSort}
-          onChange={handleSortByChange}
-        >
-          <option value="genre">Genre</option>
-          <option value="songs">Songs</option>
-          <option value="numberOfAlbums">Number Of Albums</option>
-          <option value="numberOfArtists">Number Of Artists</option>
-        </SortSelect>
-      </SortSelectContainer>
-      {currentGenres.length === 0 ? (
-        <NoGenresContainer>No Genres Found</NoGenresContainer>
-      ) : (
-        <GenresGrid>
-          {currentGenres.map((item: Genre, index: number) => (
-            <GenresCard key={index}>
-              <Title>{item.genre}</Title>
-              <Details>Songs: {item.songs}</Details>
-              <Details>Artists: {item.numberOfArtists}</Details>
-              <Details>Albums: {item.numberOfAlbums}</Details>
-            </GenresCard>
-          ))}
-        </GenresGrid>
-      )}
-
-      <Pagination>
-        {Array.from(
-          { length: Math.ceil(genres.length / genresPerPage) },
-          (_, i) => (
-            <PaginationItem
-              key={i}
-              onClick={() => paginate(i + 1)}
-              active={i + 1 === currentPage}
-            >
-              {i + 1}
-            </PaginationItem>
-          )
-        )}
-      </Pagination>
+      {renderContent()}
     </Container>
   );
 };
 
+// Styled components
 const Container = styled.div`
+  position: relative;
   width: 100%;
-  padding: 1rem 8rem 8rem;
+  padding: 1rem;
 
   @media (min-width: 768px) {
     padding: 1rem 2rem 2rem;
@@ -133,11 +141,16 @@ const SearchContainer = styled.div`
 const SortSelectContainer = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const SortLabel = styled.label`
   margin-right: 0.5rem;
-  margin-bottom: 1rem;
 `;
 
 const SortSelect = styled.select`
@@ -199,7 +212,6 @@ const SearchInput = styled.input`
 
 const NoGenresContainer = styled.div`
   display: flex;
-  width: 30rem;
   justify-content: center;
   align-items: center;
   flex-direction: column;

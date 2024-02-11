@@ -44,15 +44,60 @@ const ArtistsComponent: React.FC = () => {
     return <Loading />;
   }
 
-  if (error) {
-    return (
-      <Container>
-        <NoArtistContainer>
-          <h1>{error}</h1>
-        </NoArtistContainer>
-      </Container>
-    );
-  }
+  const renderContent = () => {
+    if (error) {
+      return (
+        <Container>
+          <NoArtistContainer>
+            <h1>{error}</h1>
+          </NoArtistContainer>
+        </Container>
+      );
+    } else if (currentArtists.length === 0) {
+      return <NoArtistContainer>No Artist Found</NoArtistContainer>;
+    } else {
+      return (
+        <>
+          <SortSelectContainer>
+            <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
+            <SortSelect
+              id="sort-select"
+              value={currentArtistsSort}
+              onChange={handleSortByChange}
+            >
+              <option value="artist">Artist</option>
+              <option value="songs">Songs</option>
+              <option value="albums">Albums</option>
+            </SortSelect>
+          </SortSelectContainer>
+          <ArtistGrid>
+            {currentArtists.map((item: Artist, index: number) => (
+              <ArtistCard key={index}>
+                <Title>{item.artist}</Title>
+                <Details>Artist: {item.artist}</Details>
+                <Details>Songs: {item.songs}</Details>
+                <Details>Albums: {item.albums}</Details>
+              </ArtistCard>
+            ))}
+          </ArtistGrid>
+          <Pagination>
+            {Array.from(
+              { length: Math.ceil(artists.length / artistsPerPage) },
+              (_, i) => (
+                <PaginationItem
+                  key={i}
+                  onClick={() => paginate(i + 1)}
+                  active={i + 1 === currentPage}
+                >
+                  {i + 1}
+                </PaginationItem>
+              )
+            )}
+          </Pagination>
+        </>
+      );
+    }
+  };
 
   return (
     <Container>
@@ -67,56 +112,16 @@ const ArtistsComponent: React.FC = () => {
           placeholder="Search Artists..."
         />
       </SearchContainer>
-      <SortSelectContainer>
-        <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
-        <SortSelect
-          id="sort-select"
-          value={currentArtistsSort}
-          onChange={handleSortByChange}
-        >
-          <option value="artist">Artist</option>
-          <option value="songs">Songs</option>
-          <option value="albums">Albums</option>
-        </SortSelect>
-      </SortSelectContainer>
-
-      {currentArtists.length === 0 ? (
-        <NoArtistContainer>No Artist Found</NoArtistContainer>
-      ) : (
-        <ArtistGrid>
-          {currentArtists.map((item: Artist, index: number) => (
-            <ArtistCard key={index}>
-              <Title>{item.artist}</Title>
-              <Details>Artist: {item.artist}</Details>
-              <Details>Songs: {item.songs}</Details>
-              <Details>Albums: {item.albums}</Details>
-            </ArtistCard>
-          ))}
-        </ArtistGrid>
-      )}
-
-      <Pagination>
-        {Array.from(
-          { length: Math.ceil(artists.length / artistsPerPage) },
-          (_, i) => (
-            <PaginationItem
-              key={i}
-              onClick={() => paginate(i + 1)}
-              active={i + 1 === currentPage}
-            >
-              {i + 1}
-            </PaginationItem>
-          )
-        )}
-      </Pagination>
+      {renderContent()}
     </Container>
   );
 };
 
-// Styles  components
+// Styled components
 const Container = styled.div`
+  position: relative;
   width: 100%;
-  padding: 1rem 8rem 8rem;
+  padding: 1rem;
 
   @media (min-width: 768px) {
     padding: 1rem 2rem 2rem;
@@ -133,11 +138,16 @@ const SearchContainer = styled.div`
 const SortSelectContainer = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const SortLabel = styled.label`
   margin-right: 0.5rem;
-  margin-bottom: 1rem;
 `;
 
 const SortSelect = styled.select`
@@ -199,7 +209,6 @@ const SearchInput = styled.input`
 
 const NoArtistContainer = styled.div`
   display: flex;
-  width: 30rem;
   justify-content: center;
   align-items: center;
   flex-direction: column;

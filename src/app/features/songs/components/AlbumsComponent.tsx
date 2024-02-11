@@ -118,9 +118,11 @@ const AlbumsComponent = () => {
   );
 };
 
+// Styled components
 const Container = styled.div`
+  position: relative;
   width: 100%;
-  padding: 1rem 8rem 8rem;
+  padding: 1rem;
 
   @media (min-width: 768px) {
     padding: 1rem 2rem 2rem;
@@ -137,11 +139,16 @@ const SearchContainer = styled.div`
 const SortSelectContainer = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const SortLabel = styled.label`
   margin-right: 0.5rem;
-  margin-bottom: 1rem;
 `;
 
 const SortSelect = styled.select`
@@ -203,7 +210,6 @@ const SearchInput = styled.input`
 
 const NoAlbumContainer = styled.div`
   display: flex;
-  width: 30rem;
   justify-content: center;
   align-items: center;
   flex-direction: column;
