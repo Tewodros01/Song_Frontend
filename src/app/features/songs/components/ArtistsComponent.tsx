@@ -113,8 +113,7 @@ const ArtistsComponent: React.FC = () => {
   );
 };
 
-// Styles and other components remain the same as provided in your code snippet
-
+// Styles  components
 const Container = styled.div`
   width: 100%;
   padding: 1rem 8rem 8rem;
