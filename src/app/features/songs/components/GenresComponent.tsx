@@ -1,41 +1,42 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { selectError, selectGenres, selectLoading } from "../slice/genresSlice";
-import { useAppSelector } from "../../../../store/store";
+import {
+  selectError,
+  selectFilteredGenres,
+  selectLoading,
+  setGenresSort,
+  setSearchInput,
+  selectGenresSort,
+} from "../slice/genresSlice";
+import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import Loading from "../../../components/Loading";
 import { Genre } from "../../../../types/genre";
 import { GenresSort } from "../../../../types/sortby";
 
 const GenresComponent: React.FC = () => {
-  const genres = useAppSelector(selectGenres);
+  const dispatch = useAppDispatch();
+
+  const genres = useAppSelector(selectFilteredGenres);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
-  const [searchInput, setSearchInput] = useState<string>("");
-  const [sortBy, setSortBy] = useState<GenresSort>("genre"); // Initial sort by genre
+  const currentGenresSort = useAppSelector(selectGenresSort);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const genresPerPage = 10;
 
-  const filteredGenres = useMemo(() => {
-    const filtered = genres.filter((genre: Genre) =>
-      genre.genre.toUpperCase().includes(searchInput.toUpperCase())
-    );
-
-    // Sorting
-    filtered.sort((a, b) => (a[sortBy] > b[sortBy] ? 1 : -1));
-
-    // Pagination
-    const indexOfLastGenre = currentPage * genresPerPage;
-    const indexOfFirstGenre = indexOfLastGenre - genresPerPage;
-    return filtered.slice(indexOfFirstGenre, indexOfLastGenre);
-  }, [genres, searchInput, sortBy, currentPage]);
-
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(event.target.value);
+    dispatch(setSearchInput(event.target.value));
+    setCurrentPage(1);
   };
 
   const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(event.target.value as GenresSort);
+    dispatch(setGenresSort(event.target.value as GenresSort));
+    setCurrentPage(1);
   };
+
+  const indexOfLastGenres = currentPage * genresPerPage;
+  const indexOfFirstGenres = indexOfLastGenres - genresPerPage;
+  const currentGenres = genres.slice(indexOfFirstGenres, indexOfLastGenres);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -62,7 +63,6 @@ const GenresComponent: React.FC = () => {
         <SearchInput
           type="text"
           id="topbar-search"
-          value={searchInput}
           onChange={handleSearchInput}
           placeholder="Search genres..."
         />
@@ -72,7 +72,7 @@ const GenresComponent: React.FC = () => {
         <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
         <SortSelect
           id="sort-select"
-          value={sortBy}
+          value={currentGenresSort}
           onChange={handleSortByChange}
         >
           <option value="genre">Genre</option>
@@ -81,11 +81,11 @@ const GenresComponent: React.FC = () => {
           <option value="numberOfArtists">Number Of Artists</option>
         </SortSelect>
       </SortSelectContainer>
-      {filteredGenres.length === 0 ? (
+      {currentGenres.length === 0 ? (
         <NoGenresContainer>No Genres Found</NoGenresContainer>
       ) : (
         <GenresGrid>
-          {filteredGenres.map((item: Genre, index: number) => (
+          {currentGenres.map((item: Genre, index: number) => (
             <GenresCard key={index}>
               <Title>{item.genre}</Title>
               <Details>Songs: {item.songs}</Details>

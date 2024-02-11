@@ -1,41 +1,42 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { selectArtist, selectError, selectLoading } from "../slice/artistSlice";
-import { useAppSelector } from "../../../../store/store";
+import {
+  selectFilteredArtists,
+  selectError,
+  selectLoading,
+  selectArtistsSort,
+  setSearchInput,
+  setArtistsSort,
+} from "../slice/artistSlice";
+import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import Loading from "../../../components/Loading";
 import { Artist } from "../../../../types/artist";
 import { ArtistsSort } from "../../../../types/sortby";
 
 const ArtistsComponent: React.FC = () => {
-  const artists = useAppSelector(selectArtist);
+  const dispatch = useAppDispatch();
+
+  const artists = useAppSelector(selectFilteredArtists);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
-  const [searchInput, setSearchInput] = useState<string>("");
-  const [sortBy, setSortBy] = useState<ArtistsSort>("artist"); // Initial sort by artist
+  const currentArtistsSort = useAppSelector(selectArtistsSort);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const artistsPerPage = 10;
 
-  const filteredArtists = useMemo(() => {
-    const filtered = artists.filter((artist: Artist) =>
-      artist.artist.toUpperCase().includes(searchInput.toUpperCase())
-    );
-
-    // Sorting
-    filtered.sort((a, b) => (a[sortBy] > b[sortBy] ? 1 : -1));
-
-    // Pagination
-    const indexOfLastArtist = currentPage * artistsPerPage;
-    const indexOfFirstArtist = indexOfLastArtist - artistsPerPage;
-    return filtered.slice(indexOfFirstArtist, indexOfLastArtist);
-  }, [artists, searchInput, sortBy, currentPage]);
-
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(event.target.value);
+    dispatch(setSearchInput(event.target.value));
+    setCurrentPage(1);
   };
 
   const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(event.target.value as ArtistsSort);
+    dispatch(setArtistsSort(event.target.value as ArtistsSort));
+    setCurrentPage(1);
   };
+
+  const indexOfLastArtists = currentPage * artistsPerPage;
+  const indexOfFirstArtists = indexOfLastArtists - artistsPerPage;
+  const currentArtists = artists.slice(indexOfFirstArtists, indexOfLastArtists);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -62,7 +63,6 @@ const ArtistsComponent: React.FC = () => {
         <SearchInput
           type="text"
           id="topbar-search"
-          value={searchInput}
           onChange={handleSearchInput}
           placeholder="Search Artists..."
         />
@@ -71,7 +71,7 @@ const ArtistsComponent: React.FC = () => {
         <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
         <SortSelect
           id="sort-select"
-          value={sortBy}
+          value={currentArtistsSort}
           onChange={handleSortByChange}
         >
           <option value="artist">Artist</option>
@@ -80,11 +80,11 @@ const ArtistsComponent: React.FC = () => {
         </SortSelect>
       </SortSelectContainer>
 
-      {filteredArtists.length === 0 ? (
+      {currentArtists.length === 0 ? (
         <NoArtistContainer>No Artist Found</NoArtistContainer>
       ) : (
         <ArtistGrid>
-          {filteredArtists.map((item: Artist, index: number) => (
+          {currentArtists.map((item: Artist, index: number) => (
             <ArtistCard key={index}>
               <Title>{item.artist}</Title>
               <Details>Artist: {item.artist}</Details>

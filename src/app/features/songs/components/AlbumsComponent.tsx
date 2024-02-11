@@ -1,41 +1,42 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { selectAlbum, selectError, selectLoading } from "../slice/albumSlice";
-import { useAppSelector } from "../../../../store/store";
+import {
+  selectAlbumsSort,
+  selectError,
+  selectFilteredAlbums,
+  selectLoading,
+  setAlbumsSort,
+  setSearchInput,
+} from "../slice/albumSlice";
+import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import { Album } from "../../../../types/album";
 import Loading from "../../../components/Loading";
 import { AlbumsSort } from "../../../../types/sortby";
 
 const AlbumsComponent = () => {
-  const albums = useAppSelector(selectAlbum);
+  const dispatch = useAppDispatch();
+
+  const albums = useAppSelector(selectFilteredAlbums);
   const isLoading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
-  const [searchInput, setSearchInput] = useState("");
-  const [sortBy, setSortBy] = useState<AlbumsSort>("album"); // Initial sort by album
+  const currentAlbumsSort = useAppSelector(selectAlbumsSort);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const albumsPerPage = 10;
 
-  const filteredAlbums = useMemo(() => {
-    const filtered = albums.filter((album: Album) =>
-      album.album.toUpperCase().includes(searchInput.toUpperCase())
-    );
-
-    // Sorting
-    filtered.sort((a, b) => (a[sortBy] > b[sortBy] ? 1 : -1));
-
-    // Pagination
-    const indexOfLastAlbum = currentPage * albumsPerPage;
-    const indexOfFirstAlbum = indexOfLastAlbum - albumsPerPage;
-    return filtered.slice(indexOfFirstAlbum, indexOfLastAlbum);
-  }, [albums, searchInput, sortBy, currentPage]);
-
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(event.target.value);
+    dispatch(setSearchInput(event.target.value));
+    setCurrentPage(1);
   };
 
   const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(event.target.value as AlbumsSort);
+    dispatch(setAlbumsSort(event.target.value as AlbumsSort));
+    setCurrentPage(1);
   };
+
+  const indexOfLastAlbums = currentPage * albumsPerPage;
+  const indexOfFirstAlbums = indexOfLastAlbums - albumsPerPage;
+  const currentAlbums = albums.slice(indexOfFirstAlbums, indexOfLastAlbums);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -43,16 +44,62 @@ const AlbumsComponent = () => {
     return <Loading />;
   }
 
-  if (error) {
-    return (
-      <Container>
+  const renderContent = () => {
+    if (error) {
+      return (
         <NoAlbumContainer>
           <h1>{error}</h1>
         </NoAlbumContainer>
-      </Container>
-    );
-  }
-
+      );
+    } else if (currentAlbums.length === 0) {
+      return (
+        <NoAlbumContainer>
+          <h1>No Albums Found</h1>
+        </NoAlbumContainer>
+      );
+    } else {
+      return (
+        <>
+          <SortSelectContainer>
+            <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
+            <SortSelect
+              id="sort-select"
+              value={currentAlbumsSort}
+              onChange={handleSortByChange}
+            >
+              <option value="artist">Artist</option>
+              <option value="songs">Songs</option>
+              <option value="album">Album</option>
+            </SortSelect>
+          </SortSelectContainer>
+          <AlbumGrid>
+            {currentAlbums.map((item: Album, index: number) => (
+              <AlbumCard key={index}>
+                <Title>{item.album}</Title>
+                <Details>Artist: {item.artist}</Details>
+                <Details>Songs: {item.songs}</Details>
+                <Details>Album: {item.album}</Details>
+              </AlbumCard>
+            ))}
+          </AlbumGrid>
+          <Pagination>
+            {Array.from(
+              { length: Math.ceil(albums.length / albumsPerPage) },
+              (_, i) => (
+                <PaginationItem
+                  key={i}
+                  onClick={() => paginate(i + 1)}
+                  active={i + 1 === currentPage}
+                >
+                  {i + 1}
+                </PaginationItem>
+              )
+            )}
+          </Pagination>
+        </>
+      );
+    }
+  };
   return (
     <Container>
       <SearchContainer>
@@ -62,55 +109,11 @@ const AlbumsComponent = () => {
         <SearchInput
           type="text"
           id="topbar-search"
-          value={searchInput}
           onChange={handleSearchInput}
           placeholder="Search Albums..."
         />
       </SearchContainer>
-
-      <SortSelectContainer>
-        <SortLabel htmlFor="sort-select">Sort by:</SortLabel>
-        <SortSelect
-          id="sort-select"
-          value={sortBy}
-          onChange={handleSortByChange}
-        >
-          <option value="artist">Artist</option>
-          <option value="songs">Songs</option>
-          <option value="album">Album</option>
-        </SortSelect>
-      </SortSelectContainer>
-      {filteredAlbums.length === 0 ? (
-        <NoAlbumContainer>
-          <h1>No Albums Found</h1>
-        </NoAlbumContainer>
-      ) : (
-        <AlbumGrid>
-          {filteredAlbums.map((item: Album, index: number) => (
-            <AlbumCard key={index}>
-              <Title>{item.album}</Title>
-              <Details>Artist: {item.artist}</Details>
-              <Details>Songs: {item.songs}</Details>
-              <Details>Album: {item.album}</Details>
-            </AlbumCard>
-          ))}
-        </AlbumGrid>
-      )}
-
-      <Pagination>
-        {Array.from(
-          { length: Math.ceil(albums.length / albumsPerPage) },
-          (_, i) => (
-            <PaginationItem
-              key={i}
-              onClick={() => paginate(i + 1)}
-              active={i + 1 === currentPage}
-            >
-              {i + 1}
-            </PaginationItem>
-          )
-        )}
-      </Pagination>
+      {renderContent()}
     </Container>
   );
 };

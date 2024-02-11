@@ -1,18 +1,24 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Album } from "../../../../types/album";
 import { RootState } from "../../../../store/store";
+import { AlbumsSort } from "../../../../types/sortby";
 
 type InitialState = {
   albums: Album[];
   loading: boolean;
-  error: any;
+  error: string | null;
+  albumsSort: AlbumsSort;
+  searchInput: string;
 };
 
 const initialState: InitialState = {
   albums: [],
   loading: false,
-  error: "",
+  error: null,
+  albumsSort: "album",
+  searchInput: "",
 };
+
 const albumSlice = createSlice({
   name: "albums",
   initialState,
@@ -29,13 +35,38 @@ const albumSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    setSearchInput(state, action: PayloadAction<string>) {
+      state.searchInput = action.payload;
+    },
+    setAlbumsSort(state, actions: PayloadAction<AlbumsSort>) {
+      state.albumsSort = actions.payload;
+    },
   },
 });
 
-export const selectAlbum = (state: RootState) => state.album.albums;
 export const selectLoading = (state: RootState) => state.album.loading;
 export const selectError = (state: RootState) => state.album.error;
+export const selectAlbumsSort = (state: RootState) => state.album.albumsSort;
+export const selectSearchInput = (state: RootState) => state.album.searchInput;
 
-export const { getAlbumStart, getAlbumSuccess, getAlbumFailure } =
-  albumSlice.actions;
+export const selectFilteredAlbums = (state: RootState) => {
+  const { albums, albumsSort, searchInput } = state.album;
+  // Filter songs based on search input
+  const filteredAlbums = albums.filter((album) =>
+    album.album?.toUpperCase().includes(searchInput.toUpperCase())
+  );
+  // Sort the filtered songs based on the selected sorting option
+  return filteredAlbums.sort((a, b) =>
+    a[albumsSort] > b[albumsSort] ? 1 : -1
+  );
+};
+
+export const {
+  getAlbumStart,
+  getAlbumSuccess,
+  getAlbumFailure,
+  setSearchInput,
+  setAlbumsSort,
+} = albumSlice.actions;
+
 export default albumSlice.reducer;

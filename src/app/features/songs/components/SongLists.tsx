@@ -48,6 +48,7 @@ const SongList: React.FC = () => {
   if (isLoading) {
     return <Loading />;
   }
+
   // Render content based on state
   const renderContent = () => {
     if (error) {
@@ -111,9 +112,6 @@ const SongList: React.FC = () => {
 
   return (
     <Container>
-      <TopBar>
-        <AddNewSong to="/newsong">Add New Song</AddNewSong>
-      </TopBar>
       <SearchContainer>
         <Description>
           Explore and search through the collection of Songs
@@ -127,25 +125,21 @@ const SongList: React.FC = () => {
       </SearchContainer>
 
       {renderContent()}
+
+      <FloatingActionButton to="/newsong">+</FloatingActionButton>
     </Container>
   );
 };
 
 // Styled components
 const Container = styled.div`
+  position: relative;
   width: 100%;
-  padding: 1rem 8rem 8rem;
+  padding: 1rem;
 
   @media (min-width: 768px) {
     padding: 1rem 2rem 2rem;
   }
-`;
-
-const TopBar = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-bottom: 2rem;
 `;
 
 const SearchContainer = styled.div`
@@ -158,11 +152,16 @@ const SearchContainer = styled.div`
 const SortSelectContainer = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const SortLabel = styled.label`
   margin-right: 0.5rem;
-  margin-bottom: 1rem;
 `;
 
 const SortSelect = styled.select`
@@ -218,19 +217,6 @@ const EditButton = styled(Link)`
   color: #fff;
 `;
 
-const AddNewSong = styled(Link)`
-  height: 3.5rem;
-  width: 15rem;
-  border-radius: 1rem;
-  border: none;
-  font-size: 1rem;
-  text-decoration: none;
-  text-align: center;
-  line-height: 3.5rem;
-  background: #4b0082;
-  color: #fff;
-`;
-
 const Description = styled.p`
   font-size: 1.2rem;
   margin-bottom: 1rem;
@@ -252,7 +238,6 @@ const SearchInput = styled.input`
 
 const NoSongContainer = styled.div`
   display: flex;
-  width: 30rem;
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -278,6 +263,23 @@ const PaginationItem = styled.div<{ active: boolean }>`
   border-radius: 0.5rem;
   background-color: ${(props) => (props.active ? "#1e40af" : "#ccc")};
   color: ${(props) => (props.active ? "#fff" : "#000")};
+`;
+
+const FloatingActionButton = styled(Link)`
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: #4b0082;
+  color: #fff;
+  font-size: 2rem;
+  text-decoration: none;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 `;
 
 export default SongList;
