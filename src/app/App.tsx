@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, ReactNode } from "react";
 import { Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "./components/Layout";
@@ -25,6 +25,14 @@ const SongListsComponentWrapper = lazy(
   () => import("./features/songs/components/SongListsComponentWrapper")
 );
 
+interface SuspenseFallbackProps {
+  children: ReactNode;
+}
+
+const SuspenseFallback: React.FC<SuspenseFallbackProps> = ({ children }) => (
+  <Suspense fallback={<Loading />}>{children}</Suspense>
+);
+
 const App: React.FC = () => {
   return (
     <Routes>
@@ -32,57 +40,57 @@ const App: React.FC = () => {
         <Route
           index
           element={
-            <Suspense fallback={<Loading />}>
+            <SuspenseFallback>
               <Home />
-            </Suspense>
+            </SuspenseFallback>
           }
         />
         <Route
           path="/songs"
           element={
-            <Suspense fallback={<Loading />}>
+            <SuspenseFallback>
               <SongListsComponentWrapper />
-            </Suspense>
+            </SuspenseFallback>
           }
         />
         <Route
           path="/edit/:id"
           element={
-            <Suspense fallback={<Loading />}>
+            <SuspenseFallback>
               <EditSongForm />
-            </Suspense>
+            </SuspenseFallback>
           }
         />
         <Route
           path="/newsong"
           element={
-            <Suspense fallback={<Loading />}>
+            <SuspenseFallback>
               <AddSongForm />
-            </Suspense>
+            </SuspenseFallback>
           }
         />
         <Route
           path="/artists"
           element={
-            <Suspense fallback={<Loading />}>
+            <SuspenseFallback>
               <ArtistsComponentWrapper />
-            </Suspense>
+            </SuspenseFallback>
           }
         />
         <Route
           path="/albums"
           element={
-            <Suspense fallback={<Loading />}>
+            <SuspenseFallback>
               <AlbumsComponentWrapper />
-            </Suspense>
+            </SuspenseFallback>
           }
         />
         <Route
           path="/genres"
           element={
-            <Suspense fallback={<Loading />}>
+            <SuspenseFallback>
               <GenresComponentWrapper />
-            </Suspense>
+            </SuspenseFallback>
           }
         />
         <Route path="*" element={<NotFoundPage />} />
